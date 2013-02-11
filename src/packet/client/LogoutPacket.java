@@ -14,6 +14,10 @@ public class LogoutPacket extends ClientPacket {
         this.username = username;
     }
 
+    public LogoutPacket(String... params) {
+        this(Integer.parseInt(params[1]), params[2]);
+    }
+
     @Override
     public String getPacketFormat() {
         return PACKET_FORMAT;

@@ -16,6 +16,10 @@ public class DenyRequestPacket extends ClientPacket {
         this.reciever = reciever;
     }
 
+    public DenyRequestPacket(String... params) {
+        this(Integer.parseInt(params[1]), params[2], params[3]);
+    }
+
     @Override
     public String getPacketFormat() {
         return PACKET_FORMAT;

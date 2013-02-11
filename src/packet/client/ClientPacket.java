@@ -13,14 +13,15 @@ public abstract class ClientPacket extends Packet {
     public abstract Pattern getCommandPattern();
 
     @SuppressWarnings("unchecked")
-    public static Packet parse(String inputCommand) {
+    public static Packet parseCommand(String inputCommand) throws InvalidClientCommandException {
         String[] cmd = inputCommand.trim().split(" ");
         String action = cmd[0];
         for (ClientCommandType t : ClientCommandType.values()) {
             if (action.equals(t.getCommand())) {
                 if (t.isValidCommand(inputCommand)) {
                     try {
-                        return (Packet) t.getPacketClass().getConstructor(String[].class).newInstance((Object[]) cmd);
+                        return (ClientPacket) t.getPacketClass().getConstructor(String[].class)
+                                .newInstance(new Object[] { cmd });
                     } catch (IllegalArgumentException e) {
                         e.printStackTrace();
                     } catch (SecurityException e) {

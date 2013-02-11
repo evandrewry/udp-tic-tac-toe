@@ -11,7 +11,7 @@ public class LoginPacketTest {
     @Test
     public void test() {
         Packet x = new LoginPacket(0, "ehi", 9);
-        ClientPacket.parse("loginhi");
+        ClientPacket.parseCommand("loginhi");
     }
 
 }

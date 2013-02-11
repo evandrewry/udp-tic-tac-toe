@@ -10,9 +10,13 @@ public class QueryListPacket extends ClientPacket {
     public static final String COMMAND = "list";
     public static final Pattern COMMAND_PATTERN = Pattern.compile("^ls$");
 
-    QueryListPacket(int packetId, String name) {
+    public QueryListPacket(int packetId, String name) {
         this.packetId = packetId;
         this.name = name;
+    }
+
+    public QueryListPacket(String... params) {
+        this(Integer.parseInt(params[1]), params[2]);
     }
 
     @Override

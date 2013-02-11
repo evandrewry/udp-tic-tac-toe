@@ -16,6 +16,11 @@ public class LoginPacket extends ClientPacket {
         this.port = port;
     }
 
+    public LoginPacket(String... params) {
+        //TODO
+        this(1, params[1], 80);
+    }
+
     @Override
     public String getPacketFormat() {
         return PACKET_FORMAT;

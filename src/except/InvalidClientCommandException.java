@@ -5,6 +5,7 @@ public class InvalidClientCommandException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     public InvalidClientCommandException() {
+        super();
     }
 
     public InvalidClientCommandException(String arg0) {
