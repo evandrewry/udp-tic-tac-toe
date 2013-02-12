@@ -1,15 +1,7 @@
 package packet.server;
 
-public abstract class ServerPacket {
-    public abstract String getPacketFormat();
+import packet.Packet;
 
-    public abstract Object[] getParameters();
+public abstract class ServerPacket extends Packet {
 
-    public String render() {
-        return this.toString();
-    }
-
-    public String toString() {
-        return String.format(getPacketFormat(), getParameters());
-    }
 }
