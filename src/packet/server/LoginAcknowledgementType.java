@@ -3,13 +3,17 @@ public enum LoginAcknowledgementType {
 	F("F"),
 	S("S");
 
-	private String display;
+	private String code;
 
 	LoginAcknowledgementType(String display) {
-		this.display = display;
+		this.code = display;
 	}
 
 	public String toString() {
-		return display;
+		return code;
+	}
+	
+	public String getCode() {
+		return code;
 	}
 }

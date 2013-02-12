@@ -5,14 +5,12 @@ import packet.client.*;
 
 public class Client {
 
-	/**
-	 * @param args
-	 */
+
+	private Packet respond(String serverPacket) {
+		return null;//TODO
+	}
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		Packet x = new LoginPacket(0, "hiiii", 0);
-		String y = x.toString();
-		System.out.println(y);
+
 		
 		
 		

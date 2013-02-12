@@ -13,7 +13,24 @@ public class TicTacToeBoard {
 		}
 	}
 	
+	public boolean maybeSetCell(int cellNo, TicTacToeCellState xo) {
+		return maybeSetCell(cellNo % 3, cellNo / 3, xo);
+	}
+	
+	public boolean maybeSetCell(int x, int y, TicTacToeCellState xo) {
+		assert xo != TicTacToeCellState._;
+		assert x < 3;
+		assert y < 3;
+		return board[y][x].maybeSet(xo);
+	}
+	
 	public String toString() {
-		return null;//TODO
+		StringBuilder s = new StringBuilder();
+		for (int i = 0; i < BOARD_HEIGHT; i++) {
+			for (int j = 0; j < BOARD_WIDTH; j++) {
+				s.append(board[i][j].getState().getCode());
+			}
+		}
+		return s.toString();
 	}
 }

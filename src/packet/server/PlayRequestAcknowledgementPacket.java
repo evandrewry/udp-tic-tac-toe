@@ -2,12 +2,12 @@ package packet.server;
 
 import packet.Packet;
 
-public class PlayRequestReplyNotificationPacket extends Packet {
+public class PlayRequestAcknowledgementPacket extends Packet {
 	private final String username;
-	private final PlayRequestStatus status;
+	private final PlayRequestAcknowledgementStatus status;
     public static final String PACKET_FORMAT = "ackchoose,%s,%s";
 
-    public PlayRequestReplyNotificationPacket(String username, PlayRequestStatus status) {
+    public PlayRequestAcknowledgementPacket(String username, PlayRequestAcknowledgementStatus status) {
     	this.username = username;
     	this.status = status;
     }

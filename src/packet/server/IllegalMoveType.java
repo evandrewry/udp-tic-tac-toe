@@ -1,13 +1,14 @@
 package packet.server;
 
-public enum PlayRequestStatus {
-	ACCEPTED("A"), DENIED("D"), FAILED("F");
+public enum IllegalMoveType {
+	OCCUPIED("O"), OUT_OF_TURN("T");
+
 	private String code;
 
-	private PlayRequestStatus(String code) {
-		this.code = code;
+	private IllegalMoveType(String display) {
+		this.code = display;
 	}
-	
+
 	public String toString() {
 		return code;
 	}

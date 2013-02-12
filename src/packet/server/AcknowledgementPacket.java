@@ -2,11 +2,11 @@ package packet.server;
 
 import packet.Packet;
 
-public class AckPacket extends Packet {
+public class AcknowledgementPacket extends Packet {
 	private int packetId;
     public static final String PACKET_FORMAT = "ack,%d";
 	
-	public AckPacket(int packetId) {
+	public AcknowledgementPacket(int packetId) {
 		this.packetId = packetId;
 	}
 	
