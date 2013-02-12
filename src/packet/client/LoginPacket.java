@@ -1,6 +1,9 @@
 package packet.client;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import exception.InvalidCommandParametersException;
 
 public class LoginPacket extends ClientPacket {
     private int packetId;
@@ -16,9 +19,16 @@ public class LoginPacket extends ClientPacket {
         this.port = port;
     }
 
-    public LoginPacket(String... params) {
+    public LoginPacket(String inputCommand) {
+    	Matcher m = getCommandPattern().matcher(inputCommand);
+        if(!m.matches()) {
+        	throw new InvalidCommandParametersException(inputCommand);
+        }
+        
         //TODO
-        this(1, params[1], 80);
+        packetId = 5;
+        username = m.group(1);
+        port = 6;
     }
 
     @Override

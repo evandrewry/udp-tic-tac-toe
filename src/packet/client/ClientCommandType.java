@@ -13,55 +13,35 @@ public enum ClientCommandType {
 
     private Class<?> clazz;
 
-    ClientCommandType(Class clazz) {
+    ClientCommandType(Class<?> clazz) {
         this.clazz = clazz;
     }
 
-    public Class getPacketClass() {
+    public Class<?> getPacketClass() {
         return clazz;
     }
 
-    public String getCommand() {
+    public String getCommand() throws NoSuchFieldException {
         try {
             return (String) clazz.getDeclaredField("COMMAND").get(null);
-        } catch (IllegalArgumentException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (SecurityException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch (Exception e) {
+        	throw new NoSuchFieldException("Could not find command name for " + clazz.getSimpleName());
         }
-
-        return null;
     }
 
-    public Pattern getCommandPattern() {
+    public Pattern getCommandPattern() throws NoSuchFieldException {
         try {
             return (Pattern) clazz.getDeclaredField("COMMAND_PATTERN").get(null);
-        } catch (IllegalArgumentException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (SecurityException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch (Exception e) {
+        	throw new NoSuchFieldException("Could not find command pattern for " + clazz.getSimpleName());
         }
-
-        return null;
     }
 
     public boolean isValidCommand(String inputCommand) {
-        return getCommandPattern().matcher(inputCommand).matches();
+        try {
+			return getCommandPattern().matcher(inputCommand).matches();
+		} catch (NoSuchFieldException e) {
+			return false;
+		}
     }
 }

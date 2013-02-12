@@ -1,4 +1,4 @@
-package except;
+package exception;
 
 public class InvalidClientCommandException extends RuntimeException {
 

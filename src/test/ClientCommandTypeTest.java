@@ -8,9 +8,14 @@ public class ClientCommandTypeTest {
 
     @Test
     public void test() {
-        System.out.println(ClientCommandType.ACCEPT_REQUEST.getCommand());
-        System.out.println(ClientCommandType.CHOOSE_PLAYER.getCommand());
-        System.out.println(ClientCommandType.DENY_REQUEST.getCommand());
+        try {
+			System.out.println(ClientCommandType.ACCEPT_REQUEST.getCommand());
+	        System.out.println(ClientCommandType.CHOOSE_PLAYER.getCommand());
+	        System.out.println(ClientCommandType.DENY_REQUEST.getCommand());
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		}
+
     }
 
 }

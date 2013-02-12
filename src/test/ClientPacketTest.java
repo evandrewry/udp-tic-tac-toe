@@ -4,11 +4,11 @@ import org.junit.Test;
 
 import packet.Packet;
 import packet.client.ClientPacket;
-import except.InvalidClientCommandException;
+import exception.InvalidCommandParametersException;
 
 public class ClientPacketTest {
 
-    @Test(expected = InvalidClientCommandException.class)
+    @Test(expected = InvalidCommandParametersException.class)
     public void testLoginFail() {
         ClientPacket.parseCommand("login");
     }
