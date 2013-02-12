@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import packet.client.ClientPacket;
 
-import common.Packet;
+import packet.Packet;
 
 import exception.InvalidCommandParametersException;
 

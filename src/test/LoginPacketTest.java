@@ -4,8 +4,7 @@ import org.junit.Test;
 
 import packet.client.ClientPacket;
 import packet.client.LoginPacket;
-
-import common.Packet;
+import packet.Packet;
 
 public class LoginPacketTest {
 

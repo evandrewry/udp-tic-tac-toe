@@ -52,19 +52,17 @@ public class ClientShell implements Runnable {
 			
 			System.out.println("Sent to server: " + inputString);
 		}
-
 	}
 
-	@Override
-	public void run() {
-		// Create DatagramSocket
-		DatagramSocket socket;
-		try {
-			socket = new DatagramSocket();
-			loop(socket);
-		} catch (SocketException e1) {
-			e1.printStackTrace();
-		}
-	}
-
+    @Override
+    public void run() {
+        // Create DatagramSocket
+        DatagramSocket senderSocket;
+        try {
+            senderSocket = new DatagramSocket();
+            loop(senderSocket);
+        } catch (SocketException e1) {
+            e1.printStackTrace();
+        }
+    }
 }

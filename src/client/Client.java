@@ -1,5 +1,4 @@
-package common;
-import client.ClientShell;
+package client;
 import packet.*;
 import packet.client.*;
 import packet.server.ServerPacket;
