@@ -1,11 +1,21 @@
 package common;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum UserState {
     FREE("A"),
     BUSY("B"),
     DECISION("D");
 
     private final String code;
+
+    private static final Map<String, UserState> codeLookup = new HashMap<String, UserState>();
+    static {
+        for (UserState t : values()) {
+            codeLookup.put(t.getCode(), t);
+        }
+    }
 
     UserState(String code) {
         this.code = code;
@@ -17,5 +27,9 @@ public enum UserState {
 
     public String getCode() {
         return this.code;
+    }
+
+    public static UserState fromCode(String code) {
+        return codeLookup.get(code);
     }
 }

@@ -1,13 +1,16 @@
 package client.packet.impl;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import client.packet.ClientPacket;
+import exception.BadPacketException;
 
 public class AcceptRequestPacket extends ClientPacket {
-    private int packetId;
-    private String sender;
-    private String reciever;
+    private final int packetId;
+    private final String sender;
+    private final String reciever;
+
     public static final String PACKET_FORMAT = "ackchoose,%d,%s,%s,A";
     public static final Pattern PACKET_PATTERN = Pattern.compile("^ackchoose,(\\d+),(\\w+),(\\w+),A$");
     public static final String COMMAND = "accept";
@@ -30,6 +33,11 @@ public class AcceptRequestPacket extends ClientPacket {
     }
 
     @Override
+    public Pattern getPacketPattern() {
+        return PACKET_PATTERN;
+    }
+
+    @Override
     public Object[] getParameters() {
         return new Object[] { packetId, sender, reciever };
     }
@@ -42,5 +50,18 @@ public class AcceptRequestPacket extends ClientPacket {
     @Override
     public String getCommand() {
         return COMMAND;
+    }
+
+    @Override
+    public AcceptRequestPacket fromPayload(String payload) {
+        Matcher m = PACKET_PATTERN.matcher(payload);
+        if (m.matches()) {
+            int packetId = Integer.parseInt(m.group(1));
+            String sender = m.group(2);
+            String reciever = m.group(3);
+            return new AcceptRequestPacket(packetId, sender, reciever);
+        } else {
+            throw new BadPacketException("Could not parse.");
+        }
     }
 }

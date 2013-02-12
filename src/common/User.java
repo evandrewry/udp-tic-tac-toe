@@ -4,8 +4,13 @@ public class User implements Comparable<User> {
     private String username;
     private UserState state;
 
-    public User(String username) {
+    public User(String username, UserState state) {
         this.username = username;
+        this.state = state;
+    }
+
+    public User(String username) {
+        this(username, UserState.FREE);
     }
 
     public String getUsername() {

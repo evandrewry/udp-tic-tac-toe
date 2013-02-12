@@ -1,8 +1,10 @@
 package client.packet.impl;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import client.packet.ClientPacket;
+import exception.BadPacketException;
 
 public class ChoosePlayerPacket extends ClientPacket {
     private final int packetId;
@@ -31,6 +33,11 @@ public class ChoosePlayerPacket extends ClientPacket {
     }
 
     @Override
+    public Pattern getPacketPattern() {
+        return PACKET_PATTERN;
+    }
+
+    @Override
     public Object[] getParameters() {
         return new Object[] { packetId, sender, reciever };
     }
@@ -45,4 +52,16 @@ public class ChoosePlayerPacket extends ClientPacket {
         return COMMAND;
     }
 
+    @Override
+    public ChoosePlayerPacket fromPayload(String payload) {
+        Matcher m = PACKET_PATTERN.matcher(payload);
+        if (m.matches()) {
+            int packetId = Integer.parseInt(m.group(1));
+            String sender = m.group(2);
+            String reciever = m.group(3);
+            return new ChoosePlayerPacket(packetId, sender, reciever);
+        } else {
+            throw new BadPacketException("Could not parse.");
+        }
+    }
 }

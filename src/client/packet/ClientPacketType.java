@@ -12,11 +12,10 @@ import client.packet.impl.LoginPacket;
 import client.packet.impl.LogoutPacket;
 import client.packet.impl.PlayGamePacket;
 import client.packet.impl.QueryListPacket;
-
 import exception.BadPacketException;
 import exception.InvalidClientCommandException;
 
-public enum ClientCommandType {
+public enum ClientPacketType {
     LOGIN(LoginPacket.class),
     QUERY_LIST(QueryListPacket.class),
     CHOOSE_PLAYER(ChoosePlayerPacket.class),
@@ -27,9 +26,9 @@ public enum ClientCommandType {
 
     private Class<?> clazz;
 
-    private static final Map<String, ClientCommandType> commandLookup = new HashMap<String, ClientCommandType>();
+    private static final Map<String, ClientPacketType> commandLookup = new HashMap<String, ClientPacketType>();
     static {
-        for (ClientCommandType t : values()) {
+        for (ClientPacketType t : values()) {
             try {
                 commandLookup.put(t.getCommand(), t);
             } catch (NoSuchFieldException e) {
@@ -38,7 +37,7 @@ public enum ClientCommandType {
         }
     }
 
-    ClientCommandType(Class<?> clazz) {
+    private ClientPacketType(Class<?> clazz) {
         this.clazz = clazz;
     }
 
@@ -46,7 +45,7 @@ public enum ClientCommandType {
         try {
             return (Pattern) clazz.getDeclaredField("PACKET_PATTERN").get(null);
         } catch (Exception e) {
-            throw new NoSuchFieldException("Could not find code " + clazz.getSimpleName());
+            throw new NoSuchFieldException("Could not find packet pattern for " + clazz.getSimpleName());
         }
     }
 
@@ -82,7 +81,7 @@ public enum ClientCommandType {
         } catch (SecurityException e) {
             e.printStackTrace();
         }
-        return null;
+        throw new IllegalStateException();
     }
 
     public Pattern getCommandPattern() throws NoSuchFieldException {
@@ -97,13 +96,13 @@ public enum ClientCommandType {
         try {
             return getCommandPattern().matcher(inputCommand).matches();
         } catch (NoSuchFieldException e) {
-            return false;
+            throw new IllegalStateException();
         }
     }
 
-    public static ClientCommandType fromCommand(String inputCommand) throws InvalidClientCommandException {
+    public static ClientPacketType fromCommand(String inputCommand) throws InvalidClientCommandException {
         String cmd = inputCommand.trim().split(" ")[0];
-        ClientCommandType ret = commandLookup.get(cmd);
+        ClientPacketType ret = commandLookup.get(cmd);
         if (ret == null) {
             throw new InvalidClientCommandException(inputCommand);
         } else {
@@ -111,8 +110,8 @@ public enum ClientCommandType {
         }
     }
 
-    public static ClientCommandType fromPacketPayload(String payload) {
-        for (ClientCommandType t : values()) {
+    public static ClientPacketType fromPacketPayload(String payload) {
+        for (ClientPacketType t : values()) {
             try {
                 if (t.getPacketPattern().matcher(payload).matches()) {
                     return t;
@@ -122,6 +121,5 @@ public enum ClientCommandType {
             }
         }
         throw new BadPacketException(payload);
-
     }
 }

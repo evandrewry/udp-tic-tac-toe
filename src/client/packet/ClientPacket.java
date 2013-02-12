@@ -14,7 +14,7 @@ public abstract class ClientPacket extends Packet {
     public abstract Pattern getCommandPattern();
 
     public static ClientPacket parseCommand(String inputCommand) throws InvalidClientCommandException {
-        ClientCommandType t = ClientCommandType.fromCommand(inputCommand);
+        ClientPacketType t = ClientPacketType.fromCommand(inputCommand);
         return t.getInstance(inputCommand);
     }
 

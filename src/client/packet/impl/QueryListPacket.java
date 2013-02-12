@@ -1,20 +1,23 @@
 package client.packet.impl;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import client.packet.ClientPacket;
+import exception.BadPacketException;
 
 public class QueryListPacket extends ClientPacket {
     private int packetId;
-    private String name;
+    private String username;
 
     public static final String PACKET_FORMAT = "list,%d,%s";
+    public static final Pattern PACKET_PATTERN = Pattern.compile("^list,(\\d+),(\\w+)$");
     public static final String COMMAND = "list";
     public static final Pattern COMMAND_PATTERN = Pattern.compile("^ls$");
 
-    public QueryListPacket(int packetId, String name) {
+    public QueryListPacket(int packetId, String username) {
         this.packetId = packetId;
-        this.name = name;
+        this.username = username;
     }
 
     public QueryListPacket(String... params) {
@@ -27,13 +30,18 @@ public class QueryListPacket extends ClientPacket {
     }
 
     @Override
+    public Pattern getPacketPattern() {
+        return PACKET_PATTERN;
+    }
+
+    @Override
     public Pattern getCommandPattern() {
         return COMMAND_PATTERN;
     }
 
     @Override
     public Object[] getParameters() {
-        return new Object[] { packetId, name };
+        return new Object[] { packetId, username };
     }
 
     @Override
@@ -41,4 +49,15 @@ public class QueryListPacket extends ClientPacket {
         return COMMAND;
     }
 
+    @Override
+    public QueryListPacket fromPayload(String payload) {
+        Matcher m = PACKET_PATTERN.matcher(payload);
+        if (m.matches()) {
+            int packetId = Integer.parseInt(m.group(1));
+            String username = m.group(2);
+            return new QueryListPacket(packetId, username);
+        } else {
+            throw new BadPacketException("Could not parse.");
+        }
+    }
 }
