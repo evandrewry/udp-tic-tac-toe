@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum UserState {
-    FREE("A"),
+    FREE("F"),
     BUSY("B"),
     DECISION("D");
 

@@ -10,12 +10,12 @@ import common.UserList;
 import exception.BadPacketException;
 
 public class CurrentUsersListPacket extends ServerPacket {
-    private UserList currentUsers;
+    private UserList users;
     public static final String PACKET_FORMAT = "ackls,%s";
     public static final Pattern PACKET_PATTERN = Pattern.compile("^ackls,(((\\w+),?)+)$");
 
     public CurrentUsersListPacket(UserList currentUsers) {
-        this.currentUsers = currentUsers;
+        this.users = currentUsers;
     }
 
     @Override
@@ -30,15 +30,15 @@ public class CurrentUsersListPacket extends ServerPacket {
 
     @Override
     public Object[] getParameters() {
-        return new Object[] { currentUsers.toString() };
+        return new Object[] { users.toString() };
     }
 
     @Override
     public CurrentUsersListPacket fromPayload(String payload) {
         Matcher m = PACKET_PATTERN.matcher(payload);
         if (m.matches()) {
-            UserList currentUsers = new UserList(c);
-            return new CurrentUsersListPacket(packetId);
+            UserList users = UserList.fromString(m.group(1));
+            return new CurrentUsersListPacket(users);
         } else {
             throw new BadPacketException("Could not parse.");
         }

@@ -25,13 +25,13 @@ public class UserList extends TreeSet<User> {
         super(s);
     }
 
-    public UserList fromString(String csv) {
+    public static UserList fromString(String csv) {
         String[] values = csv.split(",");
         assert values.length % 2 == 0;
 
         UserList out = new UserList();
         for (int i = 0; i < values.length; i++) {
-            out.add(new User(values[i], UserState.fromCode(values[i++])));
+            out.add(new User(values[i], UserState.fromCode(values[++i])));
         }
         return out;
     }

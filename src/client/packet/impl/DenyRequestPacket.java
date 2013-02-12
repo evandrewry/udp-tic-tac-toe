@@ -59,7 +59,7 @@ public class DenyRequestPacket extends ClientPacket {
             int packetId = Integer.parseInt(m.group(1));
             String sender = m.group(2);
             String reciever = m.group(3);
-            return new AcceptRequestPacket(packetId, sender, reciever);
+            return new DenyRequestPacket(packetId, sender, reciever);
         } else {
             throw new BadPacketException("Could not parse.");
         }

@@ -28,4 +28,8 @@ public class User implements Comparable<User> {
     public void setState(UserState state) {
         this.state = state;
     }
+
+    public String toString() {
+        return username + "," + state.getCode();
+    }
 }

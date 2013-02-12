@@ -1,5 +1,6 @@
 package server.packet;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.regex.Pattern;
 
 import server.packet.impl.AcknowledgementPacket;
@@ -26,6 +27,27 @@ public enum ServerPacketType {
 
     private ServerPacketType(Class<? extends ServerPacket> clazz) {
         this.clazz = clazz;
+    }
+
+    public ServerPacket fromPayload(String payload) {
+        try {
+            return (ServerPacket) clazz.getDeclaredMethod("fromPayload", String.class).invoke(null, payload);
+        } catch (InvocationTargetException e) {
+            if (e.getCause() instanceof RuntimeException) {
+                throw (RuntimeException) e.getCause();
+            } else {
+                e.printStackTrace();
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+        throw new IllegalStateException();
     }
 
     public static ServerPacketType fromPacketPayload(String payload) {

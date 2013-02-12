@@ -1,17 +1,17 @@
 package client;
-import client.packet.*;
-import packet.*;
-import server.packet.ServerPacket;
 
+import client.packet.ClientPacket;
+import server.packet.ServerPacket;
+import server.packet.ServerPacketType;
 
 public class Client {
 
+    private ClientPacket respond(String serverPacketPayload) {
+        ServerPacket sp = ServerPacketType.fromPacketPayload(serverPacketPayload)
+    }
 
-	private ServerPacket respond(String serverPacket) {
-		return null;//TODO
-	}
-	public static void main(String[] args) {
-		new Thread(new ClientThread()).start();
-	}
+    public static void main(String[] args) {
+        new Thread(new ClientThread()).start();
+    }
 
 }
