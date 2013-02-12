@@ -10,41 +10,46 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 public class ClientShell implements Runnable {
-	private static final String receiverIP = "127.0.0.1";
+	private static final String PROMPT = ">>> ";
+	private static final String receiverIP = "10.0.0.2";
 	private static final int receiverPort = 4119;
 
-	private static void loop(DatagramSocket senderSocket) {
+	private static void loop(DatagramSocket socket) {
 		// Begin to send
 		BufferedReader input = new BufferedReader(new InputStreamReader(
 				System.in));
 		
 		byte[] buffer;
 		while (true) {
+			System.out.print(PROMPT);
+			
 			String inputString;
 			try {
 				inputString = input.readLine();
 			} catch (IOException e) {
-				senderSocket.close();
+				socket.close();
 				e.printStackTrace();
 				continue;
 			}
+			
 			buffer = inputString.getBytes();
 			DatagramPacket sendPacket;
 			try {
 				sendPacket = new DatagramPacket(buffer, buffer.length,
 						InetAddress.getByName(receiverIP), receiverPort);
 			} catch (UnknownHostException e) {
-				senderSocket.close();
+				socket.close();
 				e.printStackTrace();
 				continue;
 			}
 			try {
-				senderSocket.send(sendPacket);
+				socket.send(sendPacket);
 			} catch (IOException e) {
-				senderSocket.close();
+				socket.close();
 				e.printStackTrace();
 				continue;
 			}
+			
 			System.out.println("Sent to server: " + inputString);
 		}
 
@@ -53,10 +58,10 @@ public class ClientShell implements Runnable {
 	@Override
 	public void run() {
 		// Create DatagramSocket
-		DatagramSocket senderSocket;
+		DatagramSocket socket;
 		try {
-			senderSocket = new DatagramSocket();
-			loop(senderSocket);
+			socket = new DatagramSocket();
+			loop(socket);
 		} catch (SocketException e1) {
 			e1.printStackTrace();
 		}
