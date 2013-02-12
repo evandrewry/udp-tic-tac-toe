@@ -1,6 +1,11 @@
 package packet.client;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
+
+import exception.InvalidClientCommandException;
 
 public enum ClientCommandType {
     LOGIN(LoginPacket.class),
@@ -12,6 +17,17 @@ public enum ClientCommandType {
     LOGOUT(LogoutPacket.class);
 
     private Class<?> clazz;
+    
+    private static final Map<String, ClientCommandType> lookup = new HashMap<String, ClientCommandType>();
+    static {
+        for (ClientCommandType t : values()) {
+			try {
+				lookup.put(t.getCommand(), t);
+			} catch (NoSuchFieldException e) {
+				throw new IllegalStateException(e);
+			}
+        }
+    }
 
     ClientCommandType(Class<?> clazz) {
         this.clazz = clazz;
@@ -28,6 +44,30 @@ public enum ClientCommandType {
         	throw new NoSuchFieldException("Could not find command name for " + clazz.getSimpleName());
         }
     }
+    
+    public ClientPacket getInstance(String inputCommand) {
+		try {
+			return (ClientPacket) clazz.getConstructor(String.class)
+					.newInstance(inputCommand);
+		} catch (InvocationTargetException e) {
+		    if (e.getCause() instanceof RuntimeException) {
+		        throw (RuntimeException) e.getCause();
+		    } else {
+				e.printStackTrace();
+		    }
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		}
+		return null;
+    }
 
     public Pattern getCommandPattern() throws NoSuchFieldException {
         try {
@@ -43,5 +83,15 @@ public enum ClientCommandType {
 		} catch (NoSuchFieldException e) {
 			return false;
 		}
+    }
+    
+    public static ClientCommandType fromCommand(String inputCommand) throws InvalidClientCommandException {
+    	String cmd = inputCommand.trim().split(" ")[0];
+    	ClientCommandType ret = lookup.get(cmd);
+    	if (ret == null) {
+    		throw new InvalidClientCommandException(inputCommand);
+    	} else {
+    		return ret;
+    	}
     }
 }

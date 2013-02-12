@@ -9,7 +9,7 @@ public class LoginPacket extends ClientPacket {
     private int packetId;
     private String username;
     private int port;
-    public static final String PACKET_FORMAT = "login, %d, %s, %d";
+    public static final String PACKET_FORMAT = "login,%d,%s,%d";
     public static final String COMMAND = "login";
     public static final Pattern COMMAND_PATTERN = Pattern.compile("^login\\s+(\\w+)$");
 

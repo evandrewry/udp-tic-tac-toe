@@ -7,7 +7,7 @@ public class ChoosePlayerPacket extends ClientPacket {
     private String sender;
     private String reciever;
 
-    public static final String PACKET_FORMAT = "choose, %d, %s, %s";
+    public static final String PACKET_FORMAT = "choose,%d,%s,%s";
     public static final String COMMAND = "choose";
     public static final Pattern COMMAND_PATTERN = Pattern.compile("^choose\\s+(\\w*+)$");
 
