@@ -71,4 +71,16 @@ public class LoginPacket extends ClientPacket {
             throw new BadPacketException("Could not parse.");
         }
     }
+
+    public int getPacketId() {
+        return packetId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public int getPort() {
+        return port;
+    }
 }

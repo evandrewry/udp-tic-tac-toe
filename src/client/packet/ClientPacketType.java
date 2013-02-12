@@ -24,7 +24,14 @@ public enum ClientPacketType {
     PLAY_GAME(PlayGamePacket.class),
     LOGOUT(LogoutPacket.class);
 
-    private Class<?> clazz;
+    private Class<? extends ClientPacket> clazz;
+
+    private static final Map<Class<? extends ClientPacket>, ClientPacketType> classLookup = new HashMap<Class<? extends ClientPacket>, ClientPacketType>();
+    static {
+        for (ClientPacketType t : values()) {
+            classLookup.put(t.getPacketClass(), t);
+        }
+    }
 
     private static final Map<String, ClientPacketType> commandLookup = new HashMap<String, ClientPacketType>();
     static {
@@ -49,7 +56,7 @@ public enum ClientPacketType {
         }
     }
 
-    public Class<?> getPacketClass() {
+    public Class<? extends ClientPacket> getPacketClass() {
         return clazz;
     }
 
@@ -121,5 +128,9 @@ public enum ClientPacketType {
             }
         }
         throw new BadPacketException(payload);
+    }
+
+    public static ClientPacketType fromClass(Class<? extends ClientPacket> clazz) {
+        return classLookup.get(clazz);
     }
 }

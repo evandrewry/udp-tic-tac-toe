@@ -6,9 +6,13 @@ import server.packet.LoginAcknowledgementType;
 import server.packet.ServerPacket;
 
 public class LoginAcknowledgementPacket extends ServerPacket {
-    private LoginAcknowledgementType success;
+    private LoginAcknowledgementType acktype;
     public static final String PACKET_FORMAT = "acklogin,%s";
     public static final Pattern PACKET_PATTERN = Pattern.compile("^acklogin,(\\w+)$");
+
+    public LoginAcknowledgementPacket(LoginAcknowledgementType acktype) {
+        this.acktype = acktype;
+    }
 
     @Override
     public String getPacketFormat() {
@@ -22,6 +26,6 @@ public class LoginAcknowledgementPacket extends ServerPacket {
 
     @Override
     public Object[] getParameters() {
-        return new Object[] { success.toString() };
+        return new Object[] { acktype.toString() };
     }
 }

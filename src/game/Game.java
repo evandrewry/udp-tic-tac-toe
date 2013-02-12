@@ -9,6 +9,8 @@ public class Game {
 
     public Game(User p1, User p2) {
         this.players = new Pair<User, User>(p1, p2);
+        p1.setCurrentGame(this);
+        p2.setCurrentGame(this);
     }
 
     public Pair<User, User> getPlayers() {

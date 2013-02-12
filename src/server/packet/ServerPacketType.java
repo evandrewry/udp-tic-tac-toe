@@ -1,6 +1,8 @@
 package server.packet;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import server.packet.impl.AcknowledgementPacket;
@@ -25,8 +27,19 @@ public enum ServerPacketType {
 
     private final Class<? extends ServerPacket> clazz;
 
+    private static final Map<Class<? extends ServerPacket>, ServerPacketType> classLookup = new HashMap<Class<? extends ServerPacket>, ServerPacketType>();
+    static {
+        for (ServerPacketType t : values()) {
+            classLookup.put(t.getPacketClass(), t);
+        }
+    }
+
     private ServerPacketType(Class<? extends ServerPacket> clazz) {
         this.clazz = clazz;
+    }
+
+    private Class<? extends ServerPacket> getPacketClass() {
+        return clazz;
     }
 
     public ServerPacket fromPayload(String payload) {
@@ -69,6 +82,10 @@ public enum ServerPacketType {
         } catch (Exception e) {
             throw new NoSuchFieldException("Could not find packet pattern for " + clazz.getSimpleName());
         }
+    }
+
+    public static ServerPacketType fromClass(Class<? extends ServerPacket> clazz) {
+        return classLookup.get(clazz);
     }
 
 }

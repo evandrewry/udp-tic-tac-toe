@@ -1,11 +1,11 @@
 package common;
 
-import java.util.Collection;
 import java.util.Comparator;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
-public class UserList extends TreeSet<User> {
+public class UserList extends TreeMap<String, User> {
 
     private static final long serialVersionUID = 1L;
 
@@ -13,15 +13,15 @@ public class UserList extends TreeSet<User> {
         super();
     }
 
-    public UserList(Comparator<? super User> comparator) {
+    public UserList(Comparator<? super String> comparator) {
         super(comparator);
     }
 
-    public UserList(Collection<? extends User> c) {
-        super(c);
+    public UserList(Map<? extends String, ? extends User> m) {
+        super(m);
     }
 
-    public UserList(SortedSet<User> s) {
+    public UserList(SortedMap<String, ? extends User> s) {
         super(s);
     }
 
@@ -31,7 +31,7 @@ public class UserList extends TreeSet<User> {
 
         UserList out = new UserList();
         for (int i = 0; i < values.length; i++) {
-            out.add(new User(values[i], UserState.fromCode(values[++i])));
+            out.put(values[i], new User(values[i], UserState.fromCode(values[++i])));
         }
         return out;
     }
@@ -39,7 +39,7 @@ public class UserList extends TreeSet<User> {
     public String toString() {
         StringBuilder s = new StringBuilder();
         boolean fst = true;
-        for (User u : this) {
+        for (User u : values()) {
             if (!fst || (fst = false))
                 s.append(",");
             s.append(u.getUsername()).append(",").append(u.getState().toString());
