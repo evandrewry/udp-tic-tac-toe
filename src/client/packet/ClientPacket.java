@@ -1,8 +1,9 @@
-package packet.client;
+package client.packet;
 
 import java.util.regex.Pattern;
 
-import packet.Packet;
+import common.Packet;
+
 
 import exception.InvalidClientCommandException;
 

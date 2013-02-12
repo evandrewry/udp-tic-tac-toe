@@ -1,4 +1,4 @@
-package packet;
+package common;
 
 public abstract class Packet {
     public abstract String getPacketFormat();

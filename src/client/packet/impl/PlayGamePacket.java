@@ -1,6 +1,8 @@
-package packet.client;
+package client.packet.impl;
 
 import java.util.regex.Pattern;
+
+import client.packet.ClientPacket;
 
 public class PlayGamePacket extends ClientPacket {
     private int packetId;

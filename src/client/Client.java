@@ -1,7 +1,7 @@
 package client;
+import client.packet.*;
 import packet.*;
-import packet.client.*;
-import packet.server.ServerPacket;
+import server.packet.ServerPacket;
 
 
 public class Client {

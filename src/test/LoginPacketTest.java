@@ -2,9 +2,11 @@ package test;
 
 import org.junit.Test;
 
-import packet.client.ClientPacket;
-import packet.client.LoginPacket;
-import packet.Packet;
+import client.packet.ClientPacket;
+import client.packet.impl.LoginPacket;
+
+import common.Packet;
+
 
 public class LoginPacketTest {
 

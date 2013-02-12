@@ -1,12 +1,12 @@
-package packet.server;
+package server.packet;
 
-public enum IllegalMoveType {
-    OCCUPIED("O"),
-    OUT_OF_TURN("T");
+public enum LoginAcknowledgementType {
+    FAILURE("F"),
+    SUCCESS("S");
 
     private String code;
 
-    private IllegalMoveType(String display) {
+    LoginAcknowledgementType(String display) {
         this.code = display;
     }
 

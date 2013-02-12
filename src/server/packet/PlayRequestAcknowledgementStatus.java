@@ -1,4 +1,4 @@
-package packet.server;
+package server.packet;
 
 public enum PlayRequestAcknowledgementStatus {
     ACCEPTED("A"),

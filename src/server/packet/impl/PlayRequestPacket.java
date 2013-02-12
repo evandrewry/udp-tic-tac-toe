@@ -1,4 +1,6 @@
-package packet.server;
+package server.packet.impl;
+
+import server.packet.ServerPacket;
 
 public class PlayRequestPacket extends ServerPacket {
 

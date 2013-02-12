@@ -1,4 +1,7 @@
-package packet.server;
+package server.packet.impl;
+
+import server.packet.LoginAcknowledgementType;
+import server.packet.ServerPacket;
 
 public class LoginAcknowledgementPacket extends ServerPacket {
     private LoginAcknowledgementType success;

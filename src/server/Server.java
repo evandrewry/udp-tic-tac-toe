@@ -4,7 +4,7 @@ import game.Game;
 
 import java.util.ArrayList;
 
-import packet.server.ServerPacket;
+import server.packet.ServerPacket;
 
 import common.UserList;
 

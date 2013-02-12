@@ -1,6 +1,6 @@
-package packet.server;
+package server.packet;
 
-import packet.Packet;
+import common.Packet;
 
 public abstract class ServerPacket extends Packet {
 

@@ -2,7 +2,8 @@ package test;
 
 import org.junit.Test;
 
-import packet.client.ClientCommandType;
+import client.packet.ClientCommandType;
+
 
 public class ClientCommandTypeTest {
 

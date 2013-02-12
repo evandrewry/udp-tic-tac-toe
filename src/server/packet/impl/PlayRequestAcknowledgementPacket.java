@@ -1,4 +1,8 @@
-package packet.server;
+package server.packet.impl;
+
+import server.packet.PlayRequestAcknowledgementStatus;
+import server.packet.ServerPacket;
+
 
 public class PlayRequestAcknowledgementPacket extends ServerPacket {
     private final String username;

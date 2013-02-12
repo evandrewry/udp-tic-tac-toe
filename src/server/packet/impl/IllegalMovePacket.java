@@ -1,4 +1,7 @@
-package packet.server;
+package server.packet.impl;
+
+import server.packet.IllegalMoveType;
+import server.packet.ServerPacket;
 
 public class IllegalMovePacket extends ServerPacket {
     private final IllegalMoveType type;

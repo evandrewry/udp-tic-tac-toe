@@ -1,5 +1,6 @@
-package packet.server;
+package server.packet.impl;
 
+import server.packet.ServerPacket;
 import game.GameResultType;
 
 public class GameResultPacket extends ServerPacket {

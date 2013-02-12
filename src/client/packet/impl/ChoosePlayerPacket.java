@@ -1,13 +1,16 @@
-package packet.client;
+package client.packet.impl;
 
 import java.util.regex.Pattern;
 
+import client.packet.ClientPacket;
+
 public class ChoosePlayerPacket extends ClientPacket {
-    private int packetId;
-    private String sender;
-    private String reciever;
+    private final int packetId;
+    private final String sender;
+    private final String reciever;
 
     public static final String PACKET_FORMAT = "choose,%d,%s,%s";
+    public static final Pattern PACKET_PATTERN = Pattern.compile("^choose,(\\d+),(\\w+),(\\w+)$");
     public static final String COMMAND = "choose";
     public static final Pattern COMMAND_PATTERN = Pattern.compile("^choose\\s+(\\w*+)$");
     public static final String CODE = "choose";

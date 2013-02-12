@@ -1,9 +1,17 @@
-package packet.client;
+package client.packet;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
+
+import client.packet.impl.AcceptRequestPacket;
+import client.packet.impl.ChoosePlayerPacket;
+import client.packet.impl.DenyRequestPacket;
+import client.packet.impl.LoginPacket;
+import client.packet.impl.LogoutPacket;
+import client.packet.impl.PlayGamePacket;
+import client.packet.impl.QueryListPacket;
 
 import exception.BadPacketException;
 import exception.InvalidClientCommandException;

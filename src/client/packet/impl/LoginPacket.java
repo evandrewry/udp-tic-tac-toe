@@ -1,7 +1,9 @@
-package packet.client;
+package client.packet.impl;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import client.packet.ClientPacket;
 
 import exception.InvalidCommandParametersException;
 
