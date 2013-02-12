@@ -20,11 +20,11 @@ public class LoginPacket extends ClientPacket {
     }
 
     public LoginPacket(String inputCommand) {
-    	Matcher m = getCommandPattern().matcher(inputCommand);
-        if(!m.matches()) {
-        	throw new InvalidCommandParametersException(inputCommand);
+        Matcher m = getCommandPattern().matcher(inputCommand);
+        if (!m.matches()) {
+            throw new InvalidCommandParametersException(inputCommand);
         }
-        
+
         //TODO
         packetId = 5;
         username = m.group(1);
