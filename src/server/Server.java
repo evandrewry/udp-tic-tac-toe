@@ -3,12 +3,9 @@ package server;
 import game.Game;
 
 import java.util.ArrayList;
-import java.util.TreeSet;
 
-import packet.client.ClientPacket;
 import packet.server.ServerPacket;
 
-import common.User;
 import common.UserList;
 
 public class Server {
@@ -21,7 +18,7 @@ public class Server {
     }
 
     public static void main(String[] args) {
-
+        new Thread(new ServerThread()).start();
     }
 
 }

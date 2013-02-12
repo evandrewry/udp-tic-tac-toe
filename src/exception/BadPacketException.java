@@ -20,8 +20,4 @@ public class BadPacketException extends RuntimeException {
         super(message, cause);
     }
 
-    public BadPacketException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
-
 }

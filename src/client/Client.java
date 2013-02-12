@@ -11,7 +11,7 @@ public class Client {
 		return null;//TODO
 	}
 	public static void main(String[] args) {
-		new Thread(new ClientShell()).start();
+		new Thread(new ClientThread()).start();
 	}
 
 }
