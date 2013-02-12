@@ -1,7 +1,7 @@
 package packet.server;
 
 public enum PlayRequestAcknowledgementStatus {
-	ACCEPTED("A"), DENIED("D"), FAILED("F");
+	ACCEPTED("A"), DENY("D"), FAILURE("F");
 	private String code;
 
 	private PlayRequestAcknowledgementStatus(String code) {

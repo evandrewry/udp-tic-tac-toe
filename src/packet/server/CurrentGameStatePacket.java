@@ -1,8 +1,7 @@
 package packet.server;
 
-import packet.Packet;
 
-public class CurrentGameStatePacket extends Packet {
+public class CurrentGameStatePacket extends ServerPacket {
 	private String state;
     public static final String PACKET_FORMAT = "play,%s";
 

@@ -1,8 +1,7 @@
 package packet.server;
 
-import packet.Packet;
 
-public class LoginAcknowledgementPacket extends Packet {
+public class LoginAcknowledgementPacket extends ServerPacket {
 	private LoginAcknowledgementType success;
     public static final String PACKET_FORMAT = "acklogin,%s";
 

@@ -1,7 +1,7 @@
 package packet.server;
 public enum LoginAcknowledgementType {
-	F("F"),
-	S("S");
+	FAILURE("F"),
+	SUCCESS("S");
 
 	private String code;
 

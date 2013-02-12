@@ -9,6 +9,7 @@ public class DenyRequestPacket extends ClientPacket {
     public static final String PACKET_FORMAT = "ackchoose,%d,%s,%s,D";
     public static final String COMMAND = "deny";
     public static final Pattern COMMAND_PATTERN = Pattern.compile("^deny\\s+(\\w+)$");
+    public static final String CODE = "ackchoose";
 
     public DenyRequestPacket(int packetId, String sender, String reciever) {
         this.packetId = packetId;

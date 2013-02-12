@@ -21,9 +21,13 @@ public class TicTacToeBoard {
 		assert xo != TicTacToeCellState._;
 		assert x < 3;
 		assert y < 3;
-		return board[y][x].maybeSet(xo);
+		return wins(x, y, xo) || board[y][x].maybeSet(xo);
 	}
 	
+	private boolean wins(int x, int y, TicTacToeCellState xo) {
+		return false;//TODO
+	}
+
 	public String toString() {
 		StringBuilder s = new StringBuilder();
 		for (int i = 0; i < BOARD_HEIGHT; i++) {
@@ -33,4 +37,5 @@ public class TicTacToeBoard {
 		}
 		return s.toString();
 	}
+
 }

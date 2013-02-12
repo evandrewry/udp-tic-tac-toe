@@ -1,8 +1,7 @@
 package packet.server;
 
-import packet.Packet;
 
-public class AcknowledgementPacket extends Packet {
+public class AcknowledgementPacket extends ServerPacket {
 	private int packetId;
     public static final String PACKET_FORMAT = "ack,%d";
 	

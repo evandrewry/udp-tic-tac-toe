@@ -10,6 +10,7 @@ public class ChoosePlayerPacket extends ClientPacket {
     public static final String PACKET_FORMAT = "choose,%d,%s,%s";
     public static final String COMMAND = "choose";
     public static final Pattern COMMAND_PATTERN = Pattern.compile("^choose\\s+(\\w*+)$");
+    public static final String CODE = "choose";
 
     public ChoosePlayerPacket(int packetId, String sender, String reciever) {
         this.packetId = packetId;

@@ -1,8 +1,7 @@
 package packet.server;
 
-import packet.Packet;
 
-public class IllegalMovePacket extends Packet {
+public class IllegalMovePacket extends ServerPacket {
 	private final IllegalMoveType type;
 	public static final String PACKET_FORMAT = "ackplay,%s";
 

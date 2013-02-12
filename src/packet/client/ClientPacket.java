@@ -2,7 +2,8 @@ package packet.client;
 
 import java.util.regex.Pattern;
 
-import packet.Packet;
+import common.Packet;
+
 import exception.InvalidClientCommandException;
 
 public abstract class ClientPacket extends Packet {
@@ -11,7 +12,7 @@ public abstract class ClientPacket extends Packet {
 
     public abstract Pattern getCommandPattern();
     
-    public static Packet parseCommand(String inputCommand) throws InvalidClientCommandException {
+    public static ClientPacket parseCommand(String inputCommand) throws InvalidClientCommandException {
     	ClientCommandType t = ClientCommandType.fromCommand(inputCommand);
 		return t.getInstance(inputCommand);
     }

@@ -2,8 +2,8 @@ package common;
 import java.util.ArrayList;
 import java.util.TreeSet;
 
-import packet.Packet;
 import packet.client.ClientPacket;
+import packet.server.ServerPacket;
 
 import common.Game;
 import common.User;
@@ -15,7 +15,7 @@ public class Server {
 	private ArrayList<Game> currentGames = new ArrayList<Game>();
 	private long packetIdCounter = 0L;
 	
-	private Packet respond(String clientPacket) {
+	private ServerPacket respond(String clientPacket) {
 		return null;//TODO
 	}
 	

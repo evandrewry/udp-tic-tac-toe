@@ -9,6 +9,8 @@ public class AcceptRequestPacket extends ClientPacket {
     public static final String PACKET_FORMAT = "ackchoose,%d,%s,%s,A";
     public static final String COMMAND = "accept";
     public static final Pattern COMMAND_PATTERN = Pattern.compile("^accept\\s+(\\w+)$");
+    public static final String CODE = "accept";
+
 
     public AcceptRequestPacket(int packetId, String sender, String reciever) {
         this.packetId = packetId;

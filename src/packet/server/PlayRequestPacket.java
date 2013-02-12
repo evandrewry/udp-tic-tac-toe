@@ -1,8 +1,7 @@
 package packet.server;
 
-import packet.Packet;
 
-public class PlayRequestPacket extends Packet {
+public class PlayRequestPacket extends ServerPacket {
 
 	private String requesterUsername;
     public static final String PACKET_FORMAT = "request,%s";

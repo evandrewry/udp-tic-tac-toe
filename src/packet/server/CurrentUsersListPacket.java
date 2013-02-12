@@ -3,9 +3,8 @@ package packet.server;
 
 import common.UserList;
 
-import packet.Packet;
 
-public class CurrentUsersListPacket extends Packet {
+public class CurrentUsersListPacket extends ServerPacket {
 	private UserList currentUsers;
     public static final String PACKET_FORMAT = "ackls,%s";
 

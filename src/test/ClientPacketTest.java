@@ -2,8 +2,10 @@ package test;
 
 import org.junit.Test;
 
-import packet.Packet;
 import packet.client.ClientPacket;
+
+import common.Packet;
+
 import exception.InvalidCommandParametersException;
 
 public class ClientPacketTest {

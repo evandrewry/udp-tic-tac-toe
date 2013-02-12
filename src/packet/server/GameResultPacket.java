@@ -2,9 +2,8 @@ package packet.server;
 
 import common.GameResultType;
 
-import packet.Packet;
 
-public class GameResultPacket extends Packet {
+public class GameResultPacket extends ServerPacket {
 	private final GameResultType result;
 	public static final String PACKET_FORMAT = "result,%s";
 

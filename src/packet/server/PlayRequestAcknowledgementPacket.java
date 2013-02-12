@@ -1,8 +1,7 @@
 package packet.server;
 
-import packet.Packet;
 
-public class PlayRequestAcknowledgementPacket extends Packet {
+public class PlayRequestAcknowledgementPacket extends ServerPacket {
 	private final String username;
 	private final PlayRequestAcknowledgementStatus status;
     public static final String PACKET_FORMAT = "ackchoose,%s,%s";
