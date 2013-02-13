@@ -3,6 +3,8 @@ package server.packet.impl;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import common.Payload;
+
 import server.packet.ServerPacket;
 import exception.BadPacketException;
 
@@ -31,9 +33,8 @@ public class CurrentGameStatePacket extends ServerPacket {
 		return new Object[] { state };
 	}
 
-	@Override
-	public CurrentGameStatePacket fromPayload(String payload) {
-		Matcher m = PACKET_PATTERN.matcher(payload);
+	public static CurrentGameStatePacket fromPayload(Payload payload) {
+		Matcher m = PACKET_PATTERN.matcher(payload.content);
 		if (m.matches()) {
 			String state = m.group(1);
 			return new CurrentGameStatePacket(state);

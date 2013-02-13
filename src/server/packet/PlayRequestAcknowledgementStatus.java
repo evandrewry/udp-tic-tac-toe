@@ -15,4 +15,10 @@ public enum PlayRequestAcknowledgementStatus {
 	public String getCode() {
 		return code;
 	}
+
+	public static PlayRequestAcknowledgementStatus fromCode(String group) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -3,13 +3,18 @@ package client.packet.impl;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import client.Client;
+import client.Command;
+import client.packet.ClientPacket;
+
+import common.Packet;
 import common.Payload;
 
-import client.packet.ClientPacket;
 import exception.BadPacketException;
+import exception.InvalidCommandParametersException;
 
 public class DenyRequestPacket extends ClientPacket {
-	private final int packetId;
+	private final long packetId;
 	private final String sender;
 	private final String reciever;
 
@@ -21,7 +26,7 @@ public class DenyRequestPacket extends ClientPacket {
 			.compile("^deny\\s+(\\w+)$");
 	public static final String CODE = "ackchoose";
 
-	public DenyRequestPacket(int packetId, String sender, String reciever) {
+	public DenyRequestPacket(long packetId, String sender, String reciever) {
 		this.packetId = packetId;
 		this.sender = sender;
 		this.reciever = reciever;
@@ -65,6 +70,18 @@ public class DenyRequestPacket extends ClientPacket {
 			return new DenyRequestPacket(packetId, sender, reciever);
 		} else {
 			throw new BadPacketException("Could not parse.");
+		}
+	}
+	
+	public static DenyRequestPacket fromCommand(Command command) {
+		Matcher m = COMMAND_PATTERN.matcher(command.content);
+		if (m.matches()) {
+			long packetId = Packet.nextId();
+			String sender = Client.getCurrentUser().getUsername();
+			String reciever = m.group(1);
+			return new DenyRequestPacket(packetId, sender, reciever);
+		} else {
+			throw new InvalidCommandParametersException("Could not parse.");
 		}
 	}
 }

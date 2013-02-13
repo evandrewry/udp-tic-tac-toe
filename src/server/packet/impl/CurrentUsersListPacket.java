@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 import server.packet.ServerPacket;
 
+import common.Payload;
 import common.UserList;
 
 import exception.BadPacketException;
@@ -34,9 +35,8 @@ public class CurrentUsersListPacket extends ServerPacket {
 		return new Object[] { users.toString() };
 	}
 
-	@Override
-	public CurrentUsersListPacket fromPayload(String payload) {
-		Matcher m = PACKET_PATTERN.matcher(payload);
+	public static CurrentUsersListPacket fromPayload(Payload payload) {
+		Matcher m = PACKET_PATTERN.matcher(payload.content);
 		if (m.matches()) {
 			UserList users = UserList.fromString(m.group(1));
 			return new CurrentUsersListPacket(users);

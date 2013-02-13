@@ -3,13 +3,18 @@ package client.packet.impl;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import client.Client;
+import client.Command;
+import client.packet.ClientPacket;
+
+import common.Packet;
 import common.Payload;
 
-import client.packet.ClientPacket;
 import exception.BadPacketException;
+import exception.InvalidCommandParametersException;
 
 public class ChoosePlayerPacket extends ClientPacket {
-	private final int packetId;
+	private final long packetId;
 	private final String sender;
 	private final String reciever;
 
@@ -21,7 +26,7 @@ public class ChoosePlayerPacket extends ClientPacket {
 			.compile("^choose\\s+(\\w*+)$");
 	public static final String CODE = "choose";
 
-	public ChoosePlayerPacket(int packetId, String sender, String reciever) {
+	public ChoosePlayerPacket(long packetId, String sender, String reciever) {
 		this.packetId = packetId;
 		this.sender = sender;
 		this.reciever = reciever;
@@ -67,4 +72,16 @@ public class ChoosePlayerPacket extends ClientPacket {
 			throw new BadPacketException("Could not parse.");
 		}
 	}
+	public static ChoosePlayerPacket fromCommand(Command command) {
+		Matcher m = COMMAND_PATTERN.matcher(command.content);
+		if (m.matches()) {
+			long packetId = Packet.nextId();
+			String sender = Client.getCurrentUser().getUsername();
+			String reciever = m.group(1);
+			return new ChoosePlayerPacket(packetId, sender, reciever);
+		} else {
+			throw new InvalidCommandParametersException("Could not parse.");
+		}
+	}
+	
 }

@@ -8,7 +8,11 @@ import common.Payload;
 import exception.BadPacketException;
 
 public abstract class ServerPacket extends Packet {
-	public static Packet fromPayload(Payload payload) {
+	public ServerPacketType getPacketType() {
+		return ServerPacketType.fromClass(getClass());
+	}
+
+	public static ServerPacket fromPayload(Payload payload) {
 		for (ServerPacketType t : ServerPacketType.values()) {
 			try {
 				return fromPayload(payload, t);

@@ -8,7 +8,7 @@ import exception.BadPacketException;
 
 public abstract class Packet {
 	private static long id = 0L;
-	
+
 	public abstract String getPacketFormat();
 
 	public abstract Pattern getPacketPattern();

@@ -3,6 +3,8 @@ package server.packet.impl;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import common.Payload;
+
 import server.packet.ServerPacket;
 import exception.BadPacketException;
 
@@ -31,8 +33,8 @@ public class AcknowledgementPacket extends ServerPacket {
 		return new Object[] { packetId };
 	}
 
-	public static AcknowledgementPacket fromPayload(String payload) {
-		Matcher m = PACKET_PATTERN.matcher(payload);
+	public static AcknowledgementPacket fromPayload(Payload payload) {
+		Matcher m = PACKET_PATTERN.matcher(payload.content);
 		if (m.matches()) {
 			int packetId = Integer.parseInt(m.group(1));
 			return new AcknowledgementPacket(packetId);

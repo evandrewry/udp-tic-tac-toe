@@ -6,6 +6,8 @@ import game.GameResultType;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import common.Payload;
+
 import server.packet.ServerPacket;
 
 public class GameResultPacket extends ServerPacket {
@@ -33,12 +35,11 @@ public class GameResultPacket extends ServerPacket {
 		return new Object[] { result.getCode() };
 	}
 
-	@Override
-	public CurrentUsersListPacket fromPayload(String payload) {
-		Matcher m = PACKET_PATTERN.matcher(payload);
+	public static GameResultPacket fromPayload(Payload payload) {
+		Matcher m = PACKET_PATTERN.matcher(payload.content);
 		if (m.matches()) {
 			GameResultType result = GameResultType.fromCode(m.group(1));
-			return new CurrentUsersListPacket(users);
+			return new GameResultPacket(result);
 		} else {
 			throw new BadPacketException("Could not parse.");
 		}

@@ -9,15 +9,21 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import common.User;
+
 import server.packet.ServerPacket;
 import server.packet.ServerPacketType;
 import client.packet.ClientPacket;
 import exception.BadPacketException;
 
 public class Client implements Runnable {
-	private static String username;
+	private static User currentUser;
+	private static final String PROMPT = ">>> ";
+	private static final String receiverIP = "localhost";
+	private static final int receiverPort = 4119;
+	
 	private ClientPacket respond(ServerPacket packet) {
-		switch (ServerPacketType.fromClass(packet.getClass())) {
+		switch (packet.getPacketType()) {
 		case ACK:
 			return null;
 		case CURRENT_GAME_STATE:
@@ -38,9 +44,7 @@ public class Client implements Runnable {
 			throw new BadPacketException("Unrecognized packet format");
 		}
 	}
-	private static final String PROMPT = ">>> ";
-	private static final String receiverIP = "localhost";
-	private static final int receiverPort = 4119;
+
 
 	private static void loop(DatagramSocket socket) {
 		// Begin to send
@@ -103,12 +107,12 @@ public class Client implements Runnable {
 		new Thread(new Client()).start();
 	}
 
-	public static String getUsername() {
-		return username;
+	public static void mocklogin(String username, int port) {
+		currentUser = new User(username, port);
 	}
-	
-	public void login(String username) {
-		
+
+	public static User getCurrentUser() {
+		return currentUser;
 	}
 
 }

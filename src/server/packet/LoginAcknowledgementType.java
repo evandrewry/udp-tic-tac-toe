@@ -16,4 +16,9 @@ public enum LoginAcknowledgementType {
 	public String getCode() {
 		return code;
 	}
+
+	public static LoginAcknowledgementType fromCode(String group) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

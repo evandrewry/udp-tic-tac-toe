@@ -1,11 +1,8 @@
 package client.packet;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
-
-import common.Payload;
 
 import client.Command;
 import client.packet.impl.AcceptRequestPacket;
@@ -15,6 +12,9 @@ import client.packet.impl.LoginPacket;
 import client.packet.impl.LogoutPacket;
 import client.packet.impl.PlayGamePacket;
 import client.packet.impl.QueryListPacket;
+
+import common.Payload;
+
 import exception.BadPacketException;
 import exception.InvalidClientCommandException;
 
@@ -68,30 +68,6 @@ public enum ClientPacketType {
 			throw new NoSuchFieldException("Could not find command "
 					+ clazz.getSimpleName());
 		}
-	}
-
-	public ClientPacket getInstance(String inputCommand) {
-		try {
-			return (ClientPacket) clazz.getConstructor(String.class)
-					.newInstance(inputCommand);
-		} catch (InvocationTargetException e) {
-			if (e.getCause() instanceof RuntimeException) {
-				throw (RuntimeException) e.getCause();
-			} else {
-				e.printStackTrace();
-			}
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		}
-		throw new IllegalStateException();
 	}
 
 	public Pattern getCommandPattern() throws NoSuchFieldException {

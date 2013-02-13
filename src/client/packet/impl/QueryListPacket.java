@@ -3,13 +3,15 @@ package client.packet.impl;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import common.Packet;
-import common.Payload;
-
 import client.Client;
 import client.Command;
 import client.packet.ClientPacket;
+
+import common.Packet;
+import common.Payload;
+
 import exception.BadPacketException;
+import exception.InvalidCommandParametersException;
 
 public class QueryListPacket extends ClientPacket {
 	private long packetId;
@@ -65,15 +67,15 @@ public class QueryListPacket extends ClientPacket {
 			throw new BadPacketException("Could not parse.");
 		}
 	}
-	
+
 	public static QueryListPacket fromCommand(Command command) {
 		Matcher m = COMMAND_PATTERN.matcher(command.content);
 		if (m.matches()) {
 			long packetId = Packet.nextId();
-			String username = Client.getUsername();
+			String username = Client.getCurrentUser().getUsername();
 			return new QueryListPacket(packetId, username);
 		} else {
-			throw new BadPacketException("Could not parse.");
+			throw new InvalidCommandParametersException("Could not parse.");
 		}
 	}
 }

@@ -3,6 +3,7 @@ package server.packet.impl;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import server.packet.LoginAcknowledgementType;
 import server.packet.ServerPacket;
 
 import common.Payload;
@@ -35,11 +36,11 @@ public class PlayRequestPacket extends ServerPacket {
 		return new Object[] { username };
 	}
 
-	public PlayRequestPacket(Payload payload) {
+	public static PlayRequestPacket fromPayload(Payload payload) {
 		Matcher m = PACKET_PATTERN.matcher(payload.content);
 		if (m.matches()) {
 			String username = m.group(1);
-			this.username = username;
+			return new PlayRequestPacket(username);
 		} else {
 			throw new BadPacketException("Could not parse.");
 		}

@@ -3,14 +3,18 @@ package client.packet.impl;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import client.Client;
+import client.Command;
+import client.packet.ClientPacket;
+
+import common.Packet;
 import common.Payload;
 
-import client.packet.ClientPacket;
 import exception.BadPacketException;
 import exception.InvalidCommandParametersException;
 
 public class LoginPacket extends ClientPacket {
-	private final int packetId;
+	private final long packetId;
 	private final String username;
 	private final int port;
 	public static final String PACKET_FORMAT = "login,%d,%s,%d";
@@ -20,22 +24,10 @@ public class LoginPacket extends ClientPacket {
 	public static final Pattern COMMAND_PATTERN = Pattern
 			.compile("^login\\s+(\\w+)$");
 
-	public LoginPacket(int packetId, String username, int port) {
+	public LoginPacket(long packetId, String username, int port) {
 		this.packetId = packetId;
 		this.username = username;
 		this.port = port;
-	}
-
-	public LoginPacket(String inputCommand) {
-		Matcher m = getCommandPattern().matcher(inputCommand);
-		if (!m.matches()) {
-			throw new InvalidCommandParametersException(inputCommand);
-		}
-
-		// TODO
-		packetId = 5;
-		username = m.group(1);
-		port = 6;
 	}
 
 	@Override
@@ -74,8 +66,20 @@ public class LoginPacket extends ClientPacket {
 			throw new BadPacketException("Could not parse.");
 		}
 	}
+	
+	public static LoginPacket fromCommand(Command command) {
+		Matcher m = COMMAND_PATTERN.matcher(command.content);
+		if (m.matches()) {
+			long packetId = Packet.nextId();
+			String username = Client.getCurrentUser().getUsername();
+			int port = Client.getCurrentUser().getPort();
+			return new LoginPacket(packetId, username, port);
+		} else {
+			throw new InvalidCommandParametersException("Could not parse.");
+		}
+	}
 
-	public int getPacketId() {
+	public long getPacketId() {
 		return packetId;
 	}
 

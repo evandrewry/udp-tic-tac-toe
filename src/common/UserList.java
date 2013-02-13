@@ -32,7 +32,7 @@ public class UserList extends TreeMap<String, User> {
 		UserList out = new UserList();
 		for (int i = 0; i < values.length; i++) {
 			out.put(values[i],
-					new User(values[i], UserState.fromCode(values[++i])));
+				new User(values[i], UserState.fromCode(values[++i]), 0));
 		}
 		return out;
 	}

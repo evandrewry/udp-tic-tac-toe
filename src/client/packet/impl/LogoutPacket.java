@@ -3,21 +3,26 @@ package client.packet.impl;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import client.Client;
+import client.Command;
+import client.packet.ClientPacket;
+
+import common.Packet;
 import common.Payload;
 
-import client.packet.ClientPacket;
 import exception.BadPacketException;
+import exception.InvalidCommandParametersException;
 
 public class LogoutPacket extends ClientPacket {
-	private int packetId;
-	private String username;
+	private final long packetId;
+	private final String username;
 	public static final String PACKET_FORMAT = "logout,%d,%s";
 	public static final Pattern PACKET_PATTERN = Pattern
 			.compile("^logout,(\\d+),(\\w+)$");
 	public static final String COMMAND = "logout";
 	public static final Pattern COMMAND_PATTERN = Pattern.compile("^logout$");
 
-	public LogoutPacket(int packetId, String username) {
+	public LogoutPacket(long packetId, String username) {
 		this.packetId = packetId;
 		this.username = username;
 	}
@@ -59,6 +64,17 @@ public class LogoutPacket extends ClientPacket {
 			return new LogoutPacket(packetId, username);
 		} else {
 			throw new BadPacketException("Could not parse.");
+		}
+	}
+	
+	public static LogoutPacket fromCommand(Command command) {
+		Matcher m = COMMAND_PATTERN.matcher(command.content);
+		if (m.matches()) {
+			long packetId = Packet.nextId();
+			String username = Client.getCurrentUser().getUsername();
+			return new LogoutPacket(packetId, username);
+		} else {
+			throw new InvalidCommandParametersException("Could not parse.");
 		}
 	}
 }

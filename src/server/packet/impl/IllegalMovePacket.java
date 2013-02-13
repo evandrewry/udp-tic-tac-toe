@@ -1,6 +1,12 @@
 package server.packet.impl;
 
+import exception.BadPacketException;
+import game.GameResultType;
+
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import common.Payload;
 
 import server.packet.IllegalMoveType;
 import server.packet.ServerPacket;
@@ -30,4 +36,13 @@ public class IllegalMovePacket extends ServerPacket {
 		return new Object[] { type.getCode() };
 	}
 
+	public static IllegalMovePacket fromPayload(Payload payload) {
+		Matcher m = PACKET_PATTERN.matcher(payload.content);
+		if (m.matches()) {
+			IllegalMoveType type = IllegalMoveType.fromCode(m.group(1));
+			return new IllegalMovePacket(type);
+		} else {
+			throw new BadPacketException("Could not parse.");
+		}
+	}
 }

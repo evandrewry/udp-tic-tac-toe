@@ -16,4 +16,9 @@ public enum IllegalMoveType {
 	public String getCode() {
 		return code;
 	}
+
+	public static IllegalMoveType fromCode(String code) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

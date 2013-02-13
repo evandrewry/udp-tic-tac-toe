@@ -53,7 +53,7 @@ public class Server {
 
 		// register user if no user exists with this username
 		if (u == null) {
-			u = new User(packet.getUsername(), UserState.OFFLINE);
+			u = new User(packet.getUsername(), UserState.OFFLINE, packet.getPort());
 			currentUsers.put(u.getUsername(), u);
 		}
 
