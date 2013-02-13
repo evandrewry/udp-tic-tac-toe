@@ -9,11 +9,11 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import server.packet.ServerPacket;
+import client.packet.ClientPacket;
+
 import common.User;
 
-import server.packet.ServerPacket;
-import server.packet.ServerPacketType;
-import client.packet.ClientPacket;
 import exception.BadPacketException;
 
 public class Client implements Runnable {
@@ -21,7 +21,7 @@ public class Client implements Runnable {
 	private static final String PROMPT = ">>> ";
 	private static final String receiverIP = "localhost";
 	private static final int receiverPort = 4119;
-	
+
 	private ClientPacket respond(ServerPacket packet) {
 		switch (packet.getPacketType()) {
 		case ACK:
@@ -44,7 +44,6 @@ public class Client implements Runnable {
 			throw new BadPacketException("Unrecognized packet format");
 		}
 	}
-
 
 	private static void loop(DatagramSocket socket) {
 		// Begin to send

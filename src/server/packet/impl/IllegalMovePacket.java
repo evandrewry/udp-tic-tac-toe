@@ -1,15 +1,14 @@
 package server.packet.impl;
 
-import exception.BadPacketException;
-import game.GameResultType;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import common.Payload;
-
 import server.packet.IllegalMoveType;
 import server.packet.ServerPacket;
+
+import common.Payload;
+
+import exception.BadPacketException;
 
 public class IllegalMovePacket extends ServerPacket {
 	private final IllegalMoveType type;

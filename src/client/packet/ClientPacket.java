@@ -3,9 +3,6 @@ package client.packet;
 import java.lang.reflect.InvocationTargetException;
 import java.util.regex.Pattern;
 
-import server.packet.ServerPacket;
-import server.packet.ServerPacketType;
-
 import client.Command;
 
 import common.Packet;
@@ -22,11 +19,11 @@ public abstract class ClientPacket extends Packet {
 	public boolean isValidCommmand(String inputCommand) {
 		return getCommandPattern().matcher(inputCommand).matches();
 	}
-	
+
 	public ClientPacketType getPacketType() {
 		return ClientPacketType.fromClass(getClass());
 	}
-	
+
 	public static ClientPacket fromCommand(Command command) {
 		return fromCommand(command, ClientPacketType.fromCommand(command));
 	}

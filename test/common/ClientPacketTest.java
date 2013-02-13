@@ -24,7 +24,7 @@ public class ClientPacketTest {
 	public void setUp() {
 		Client.mocklogin("evan", 4119);
 	}
-	
+
 	@Test(expected = InvalidCommandParametersException.class)
 	public void testLoginFail() {
 		ClientPacket.fromCommand(new Command("login"));
@@ -50,13 +50,15 @@ public class ClientPacketTest {
 
 	@Test
 	public void testFromPayload_accept() {
-		Packet p = ClientPacket.fromPayload(new Payload("ackchoose,2,matt,john,A"));
+		Packet p = ClientPacket.fromPayload(new Payload(
+				"ackchoose,2,matt,john,A"));
 		assertTrue(p.getClass().equals(AcceptRequestPacket.class));
 	}
 
 	@Test
 	public void testFromPayload_deny() {
-		Packet p = ClientPacket.fromPayload(new Payload("ackchoose,3,matt,john,D"));
+		Packet p = ClientPacket.fromPayload(new Payload(
+				"ackchoose,3,matt,john,D"));
 		assertTrue(p.getClass().equals(DenyRequestPacket.class));
 	}
 
@@ -76,6 +78,7 @@ public class ClientPacketTest {
 	public void testFromPayload() {
 		Packet p = ClientPacket.fromPayload(new Payload("poop"));
 	}
+
 	@Test
 	public void testParseCommand_ls() {
 		ClientPacket p = ClientPacket.fromCommand(new Command("ls"));

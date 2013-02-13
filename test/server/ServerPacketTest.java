@@ -1,8 +1,7 @@
 package server;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import server.packet.ServerPacket;
@@ -15,20 +14,7 @@ import server.packet.impl.LoginAcknowledgementPacket;
 import server.packet.impl.PlayRequestAcknowledgementPacket;
 import server.packet.impl.PlayRequestPacket;
 
-import client.Command;
-import client.packet.ClientPacket;
-import client.packet.impl.AcceptRequestPacket;
-import client.packet.impl.ChoosePlayerPacket;
-import client.packet.impl.DenyRequestPacket;
-import client.packet.impl.LoginPacket;
-import client.packet.impl.LogoutPacket;
-import client.packet.impl.PlayGamePacket;
-import client.packet.impl.QueryListPacket;
-
-import common.Packet;
 import common.Payload;
-
-import exception.InvalidCommandParametersException;
 
 public class ServerPacketTest {
 
@@ -37,36 +23,46 @@ public class ServerPacketTest {
 		ServerPacket p = ServerPacket.fromPayload(new Payload("acklogin,F"));
 		assertTrue(p.getClass().equals(LoginAcknowledgementPacket.class));
 	}
+
 	@Test
 	public void testFromPayload_ackls() {
-		ServerPacket p = ServerPacket.fromPayload(new Payload("ackls,john,D,fred,F,foo,D"));
+		ServerPacket p = ServerPacket.fromPayload(new Payload(
+				"ackls,john,D,fred,F,foo,D"));
 		assertTrue(p.getClass().equals(CurrentUsersListPacket.class));
 	}
+
 	@Test
 	public void testFromPayload_request() {
 		ServerPacket p = ServerPacket.fromPayload(new Payload("request,evan"));
 		assertTrue(p.getClass().equals(PlayRequestPacket.class));
 	}
+
 	@Test
 	public void testFromPayload_ackchoose() {
-		ServerPacket p = ServerPacket.fromPayload(new Payload("ackchoose,evan,D"));
+		ServerPacket p = ServerPacket.fromPayload(new Payload(
+				"ackchoose,evan,D"));
 		assertTrue(p.getClass().equals(PlayRequestAcknowledgementPacket.class));
 	}
+
 	@Test
 	public void testFromPayload_ack() {
 		ServerPacket p = ServerPacket.fromPayload(new Payload("ack,5"));
 		assertTrue(p.getClass().equals(AcknowledgementPacket.class));
 	}
+
 	@Test
 	public void testFromPayload_play() {
-		ServerPacket p = ServerPacket.fromPayload(new Payload("play,012012000"));
+		ServerPacket p = ServerPacket
+				.fromPayload(new Payload("play,012012000"));
 		assertTrue(p.getClass().equals(CurrentGameStatePacket.class));
 	}
+
 	@Test
 	public void testFromPayload_ackplay() {
 		ServerPacket p = ServerPacket.fromPayload(new Payload("ackplay,O"));
 		assertTrue(p.getClass().equals(IllegalMovePacket.class));
 	}
+
 	@Test
 	public void testFromPayload_result() {
 		ServerPacket p = ServerPacket.fromPayload(new Payload("result,W"));

@@ -66,7 +66,7 @@ public class LogoutPacket extends ClientPacket {
 			throw new BadPacketException("Could not parse.");
 		}
 	}
-	
+
 	public static LogoutPacket fromCommand(Command command) {
 		Matcher m = COMMAND_PATTERN.matcher(command.content);
 		if (m.matches()) {

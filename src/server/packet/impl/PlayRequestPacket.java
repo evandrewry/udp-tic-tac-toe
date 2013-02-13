@@ -3,7 +3,6 @@ package server.packet.impl;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import server.packet.LoginAcknowledgementType;
 import server.packet.ServerPacket;
 
 import common.Payload;

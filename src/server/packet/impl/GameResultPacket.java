@@ -6,9 +6,9 @@ import game.GameResultType;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import common.Payload;
-
 import server.packet.ServerPacket;
+
+import common.Payload;
 
 public class GameResultPacket extends ServerPacket {
 	private final GameResultType result;

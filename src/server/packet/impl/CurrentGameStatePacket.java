@@ -3,9 +3,10 @@ package server.packet.impl;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import server.packet.ServerPacket;
+
 import common.Payload;
 
-import server.packet.ServerPacket;
 import exception.BadPacketException;
 
 public class CurrentGameStatePacket extends ServerPacket {
