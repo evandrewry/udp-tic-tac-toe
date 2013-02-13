@@ -1,20 +1,18 @@
 package server.packet;
 
 public enum PlayRequestAcknowledgementStatus {
-    ACCEPTED("A"),
-    DENY("D"),
-    FAILURE("F");
-    private String code;
+	ACCEPTED("A"), DENY("D"), FAILURE("F");
+	private String code;
 
-    private PlayRequestAcknowledgementStatus(String code) {
-        this.code = code;
-    }
+	private PlayRequestAcknowledgementStatus(String code) {
+		this.code = code;
+	}
 
-    public String toString() {
-        return code;
-    }
+	public String toString() {
+		return code;
+	}
 
-    public String getCode() {
-        return code;
-    }
+	public String getCode() {
+		return code;
+	}
 }

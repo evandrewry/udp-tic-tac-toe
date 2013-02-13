@@ -1,20 +1,19 @@
 package server.packet;
 
 public enum LoginAcknowledgementType {
-    FAILURE("F"),
-    SUCCESS("S");
+	FAILURE("F"), SUCCESS("S");
 
-    private String code;
+	private String code;
 
-    LoginAcknowledgementType(String display) {
-        this.code = display;
-    }
+	LoginAcknowledgementType(String display) {
+		this.code = display;
+	}
 
-    public String toString() {
-        return code;
-    }
+	public String toString() {
+		return code;
+	}
 
-    public String getCode() {
-        return code;
-    }
+	public String getCode() {
+		return code;
+	}
 }
