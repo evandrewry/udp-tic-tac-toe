@@ -6,22 +6,19 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.util.Calendar;
 
-public class ServerThread implements Runnable {
-	public static final int PORT = 4119;
-	public static final int bufferSize = 1024;
+public class UDPReciever implements Runnable {
+	private int port = 4119;
+	private int bufferSize = 1024;
+	private static final String SUCCESS_MSG_FMT = "Receiving at port %d ...";
 
 	@Override
 	public void run() {
-		/*
-		 * Create a DatagramSocket DatagramSocket is used to receive UDP packets
-		 * Do forget to bind the receiving port here
-		 */
+		// Create a DatagramSocket to receive UDP packets
 		DatagramSocket socket;
 		try {
-			socket = new DatagramSocket(PORT);
+			socket = new DatagramSocket(port);
 
-			System.out.println("Receiving at port " + String.valueOf(PORT)
-					+ " ...");
+			System.out.printf(SUCCESS_MSG_FMT, port);
 
 			/*
 			 * Begin to receive UDP packet No connection is set up for UDP
