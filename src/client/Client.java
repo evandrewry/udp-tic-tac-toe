@@ -14,7 +14,6 @@ import java.util.concurrent.Executors;
 
 import com.sun.corba.se.spi.orbutil.threadpool.ThreadPool;
 
-import server.UDPReciever;
 import server.packet.ServerPacket;
 import client.packet.ClientPacket;
 
@@ -25,17 +24,17 @@ import exception.BadPacketException;
 public class Client {
 	private final DatagramSocket socket;
 	private final ExecutorService pool;
-	private static User currentUser;
+	private User currentUser;
 	private static final String PROMPT = ">>> ";
 	private static final String receiverIP = "localhost";
 	private static final int receiverPort = 4119;
-	
-	private Client() throws IOException {
-		socket = new DatagramSocket(4119);
-		pool = Executors.newFixedThreadPool(1);
+
+	public Client() throws IOException {
+		socket = new DatagramSocket();
+		pool = Executors.newFixedThreadPool(2);
 	}
 
-	private ClientPacket respond(ServerPacket packet) {
+	ClientPacket respond(ServerPacket packet) {
 		switch (packet.getPacketType()) {
 		case ACK:
 			return null;
@@ -58,8 +57,9 @@ public class Client {
 		}
 	}
 
-	private void loop(DatagramSocket socket) {
-
+	private void run() throws SocketException {
+	    send();
+	    recieve();
 	}
 
 	private ClientPacket ackResponse(ServerPacket packet) {
@@ -68,23 +68,27 @@ public class Client {
 
 	public static void main(String[] args) throws IOException {
 		Client c = new Client();
-		c.loop(socket);
-	}
-	
-	public void recieve() throws SocketException {
-		pool.execute(new UDPReciever(new DatagramSocket()));
-	}
-	
-	public void send() {
-		pool.execute(new UDPSender());
+		c.run();
 	}
 
-	public static void mocklogin(String username, int port) {
+	public void recieve() throws SocketException {
+		pool.execute(new UDPReciever(socket, this));
+	}
+
+	public void send() throws SocketException {
+		pool.execute(new UDPSender(new DatagramSocket(), receiverIP, receiverPort, this));
+	}
+
+	public void login(String username, int port) {
 		currentUser = new User(username, port);
 	}
 
-	public static User getCurrentUser() {
+	public User getCurrentUser() {
 		return currentUser;
 	}
+
+    public int getPort() {
+        return socket.getLocalPort();
+    }
 
 }

@@ -72,11 +72,11 @@ public class PlayGamePacket extends ClientPacket {
 		}
 	}
 
-	public static PlayGamePacket fromCommand(Command command) {
+	public static PlayGamePacket fromCommand(Command command, Client handler) {
 		Matcher m = COMMAND_PATTERN.matcher(command.content);
 		if (m.matches()) {
 			long packetId = Packet.nextId();
-			String username = Client.getCurrentUser().getUsername();
+			String username = handler.getCurrentUser().getUsername();
 			int number = Integer.parseInt(m.group(1));
 			return new PlayGamePacket(packetId, username, number);
 		} else {

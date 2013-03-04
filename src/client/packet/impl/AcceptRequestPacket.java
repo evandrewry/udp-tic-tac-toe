@@ -73,11 +73,11 @@ public class AcceptRequestPacket extends ClientPacket {
 		}
 	}
 
-	public static AcceptRequestPacket fromCommand(Command command) {
+	public static AcceptRequestPacket fromCommand(Command command, Client handler) {
 		Matcher m = COMMAND_PATTERN.matcher(command.content);
 		if (m.matches()) {
 			long packetId = Packet.nextId();
-			String sender = Client.getCurrentUser().getUsername();
+			String sender = handler.getCurrentUser().getUsername();
 			String reciever = m.group(1);
 			return new AcceptRequestPacket(packetId, sender, reciever);
 		} else {

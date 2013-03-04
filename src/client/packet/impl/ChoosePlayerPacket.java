@@ -85,11 +85,11 @@ public class ChoosePlayerPacket extends ClientPacket {
 		}
 	}
 
-	public static ChoosePlayerPacket fromCommand(Command command) {
+	public static ChoosePlayerPacket fromCommand(Command command, Client handler) {
 		Matcher m = COMMAND_PATTERN.matcher(command.content);
 		if (m.matches()) {
 			long packetId = Packet.nextId();
-			String sender = Client.getCurrentUser().getUsername();
+			String sender = handler.getCurrentUser().getUsername();
 			String reciever = m.group(1);
 			return new ChoosePlayerPacket(packetId, sender, reciever);
 		} else {

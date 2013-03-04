@@ -73,11 +73,11 @@ public class DenyRequestPacket extends ClientPacket {
 		}
 	}
 
-	public static DenyRequestPacket fromCommand(Command command) {
+	public static DenyRequestPacket fromCommand(Command command, Client handler) {
 		Matcher m = COMMAND_PATTERN.matcher(command.content);
 		if (m.matches()) {
 			long packetId = Packet.nextId();
-			String sender = Client.getCurrentUser().getUsername();
+			String sender = handler.getCurrentUser().getUsername();
 			String reciever = m.group(1);
 			return new DenyRequestPacket(packetId, sender, reciever);
 		} else {

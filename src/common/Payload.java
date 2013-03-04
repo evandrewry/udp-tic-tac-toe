@@ -6,4 +6,8 @@ public class Payload {
 	public Payload(String content) {
 		this.content = content;
 	}
+
+	public String toString() {
+	    return content;
+	}
 }

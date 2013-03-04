@@ -67,12 +67,13 @@ public class LoginPacket extends ClientPacket {
 		}
 	}
 
-	public static LoginPacket fromCommand(Command command) {
+	public static LoginPacket fromCommand(Command command, Client handler) {
 		Matcher m = COMMAND_PATTERN.matcher(command.content);
 		if (m.matches()) {
 			long packetId = Packet.nextId();
-			String username = Client.getCurrentUser().getUsername();
-			int port = Client.getCurrentUser().getPort();
+			String username = m.group(1);
+			int port = handler.getPort();
+			handler.login(username, port);
 			return new LoginPacket(packetId, username, port);
 		} else {
 			throw new InvalidCommandParametersException("Could not parse.");

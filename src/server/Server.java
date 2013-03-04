@@ -3,7 +3,12 @@ package server;
 import exception.BadPacketException;
 import game.Game;
 
+import java.io.IOException;
+import java.net.DatagramSocket;
+import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import server.packet.LoginAcknowledgementType;
 import server.packet.ServerPacket;
@@ -19,67 +24,74 @@ import common.UserList;
 import common.UserState;
 
 public class Server {
-	private UserList currentUsers = new UserList();
-	private ArrayList<Game> currentGames = new ArrayList<Game>();
+    private final DatagramSocket socket;
+    private final ExecutorService pool;
+    private UserList currentUsers = new UserList();
+    private ArrayList<Game> currentGames = new ArrayList<Game>();
 
-	private ServerPacket getResponse(ClientPacket packet) {
-		switch (packet.getPacketType()) {
-		case LOGIN:
-			return handleLogin((LoginPacket) packet);
-		case QUERY_LIST:
-			return null;
-		case CHOOSE_PLAYER:
-			return null;
-		case ACCEPT_REQUEST:
-			return null;
-		case DENY_REQUEST:
-			return null;
-		case PLAY_GAME:
-			return null;
-		case LOGOUT:
-			return null;
-		default:
-			throw new BadPacketException("Unrecognized packet format");
-		}
-	}
+    private Server() throws IOException {
+        socket = new DatagramSocket(4119);
+        pool = Executors.newFixedThreadPool(2);
+    }
 
-	/**
-	 * 
-	 * @param packet
-	 * @return
-	 */
-	private ServerPacket handleLogin(LoginPacket packet) {
-		// try to find a user with the input username
-		User u = currentUsers.get(packet.getUsername());
+    public ServerPacket respond(ClientPacket packet) {
+        switch (packet.getPacketType()) {
+            case LOGIN:
+                return handleLogin((LoginPacket) packet);
+            case QUERY_LIST:
+                return null;
+            case CHOOSE_PLAYER:
+                return null;
+            case ACCEPT_REQUEST:
+                return null;
+            case DENY_REQUEST:
+                return null;
+            case PLAY_GAME:
+                return null;
+            case LOGOUT:
+                return null;
+            default:
+                throw new BadPacketException("Unrecognized packet format");
+        }
+    }
 
-		// register user if no user exists with this username
-		if (u == null) {
-			u = new User(packet.getUsername(), UserState.OFFLINE,
-					packet.getPort());
-			currentUsers.put(u.getUsername(), u);
-		}
+    /**
+     *
+     * @param packet
+     * @return
+     */
+    private ServerPacket handleLogin(LoginPacket packet) {
+        // try to find a user with the input username
+        User u = currentUsers.get(packet.getUsername());
 
-		if (u.getState() == UserState.OFFLINE) {
-			// login success for offline/newly registered user
-			u.setState(UserState.FREE);
-			return new LoginAcknowledgementPacket(
-					LoginAcknowledgementType.SUCCESS);
+        // register user if no user exists with this username
+        if (u == null) {
+            u = new User(packet.getUsername(), UserState.OFFLINE, packet.getPort());
+            currentUsers.put(u.getUsername(), u);
+        }
 
-		} else if (u.getState() == UserState.BUSY
-				|| u.getState() == UserState.DECISION
-				|| u.getState() == UserState.FREE) {
-			// login failure for online user
-			return new LoginAcknowledgementPacket(
-					LoginAcknowledgementType.FAILURE);
+        if (u.getState() == UserState.OFFLINE) {
+            // login success for offline/newly registered user
+            u.setState(UserState.FREE);
+            return new LoginAcknowledgementPacket(LoginAcknowledgementType.SUCCESS);
 
-		} else {
-			// this should not be reachable
-			throw new IllegalStateException();
-		}
-	}
+        } else if (u.getState() == UserState.BUSY || u.getState() == UserState.DECISION
+                || u.getState() == UserState.FREE) {
+            // login failure for online user
+            return new LoginAcknowledgementPacket(LoginAcknowledgementType.FAILURE);
 
-	public static void main(String[] args) {
-		new Thread(new UDPReciever()).start();
-	}
+        } else {
+            // this should not be reachable
+            throw new IllegalStateException();
+        }
+    }
+
+    public void recieve() throws SocketException {
+        pool.execute(new UDPReciever(socket, this));
+    }
+
+    public static void main(String[] args) throws SocketException, IOException {
+        (new Server()).recieve();
+    }
 
 }

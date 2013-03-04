@@ -2,6 +2,8 @@ package common;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,14 +22,17 @@ import exception.InvalidCommandParametersException;
 
 public class ClientPacketTest {
 
+    private Client client;
+
 	@Before
-	public void setUp() {
-		Client.mocklogin("evan", 4119);
+	public void setUp() throws IOException {
+	    client = new Client();
+		client.login("evan", 4119);
 	}
 
 	@Test(expected = InvalidCommandParametersException.class)
 	public void testLoginFail() {
-		ClientPacket.fromCommand(new Command("login"));
+		ClientPacket.fromCommand(new Command("login"), client);
 	}
 
 	@Test
@@ -81,43 +86,43 @@ public class ClientPacketTest {
 
 	@Test
 	public void testParseCommand_ls() {
-		ClientPacket p = ClientPacket.fromCommand(new Command("ls"));
+		ClientPacket p = ClientPacket.fromCommand(new Command("ls"), client);
 		assertTrue(p.getClass().equals(QueryListPacket.class));
 	}
 
 	@Test
 	public void testParseCommand_login() {
-		Packet p = ClientPacket.fromCommand(new Command("login evan"));
+		Packet p = ClientPacket.fromCommand(new Command("login evan"), client);
 		assertTrue(p.getClass().equals(LoginPacket.class));
 	}
 
 	@Test
 	public void testParseCommand_choose() {
-		Packet p = ClientPacket.fromCommand(new Command("choose poop"));
+		Packet p = ClientPacket.fromCommand(new Command("choose poop"), client);
 		assertTrue(p.getClass().equals(ChoosePlayerPacket.class));
 	}
 
 	@Test
 	public void testParseCommand_accept() {
-		Packet p = ClientPacket.fromCommand(new Command("accept evan"));
+		Packet p = ClientPacket.fromCommand(new Command("accept evan"), client);
 		assertTrue(p.getClass().equals(AcceptRequestPacket.class));
 	}
 
 	@Test
 	public void testParseCommand_deny() {
-		Packet p = ClientPacket.fromCommand(new Command("deny evan"));
+		Packet p = ClientPacket.fromCommand(new Command("deny evan"), client);
 		assertTrue(p.getClass().equals(DenyRequestPacket.class));
 	}
 
 	@Test
 	public void testParseCommand_play() {
-		Packet p = ClientPacket.fromCommand(new Command("play 3"));
+		Packet p = ClientPacket.fromCommand(new Command("play 3"), client);
 		assertTrue(p.getClass().equals(PlayGamePacket.class));
 	}
 
 	@Test
 	public void testParseCommand_logout() {
-		Packet p = ClientPacket.fromCommand(new Command("logout"));
+		Packet p = ClientPacket.fromCommand(new Command("logout"), client);
 		assertTrue(p.getClass().equals(LogoutPacket.class));
 	}
 }

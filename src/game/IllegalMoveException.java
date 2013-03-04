@@ -20,9 +20,4 @@ public class IllegalMoveException extends RuntimeException {
 		super(message, cause);
 	}
 
-	public IllegalMoveException(String message, Throwable cause,
-			boolean enableSuppression, boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
-
 }

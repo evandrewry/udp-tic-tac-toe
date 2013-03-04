@@ -67,11 +67,11 @@ public class LogoutPacket extends ClientPacket {
 		}
 	}
 
-	public static LogoutPacket fromCommand(Command command) {
+	public static LogoutPacket fromCommand(Command command, Client handler) {
 		Matcher m = COMMAND_PATTERN.matcher(command.content);
 		if (m.matches()) {
 			long packetId = Packet.nextId();
-			String username = Client.getCurrentUser().getUsername();
+			String username = handler.getCurrentUser().getUsername();
 			return new LogoutPacket(packetId, username);
 		} else {
 			throw new InvalidCommandParametersException("Could not parse.");

@@ -3,6 +3,7 @@ package client.packet;
 import java.lang.reflect.InvocationTargetException;
 import java.util.regex.Pattern;
 
+import client.Client;
 import client.Command;
 
 import common.Packet;
@@ -24,16 +25,16 @@ public abstract class ClientPacket extends Packet {
 		return ClientPacketType.fromClass(getClass());
 	}
 
-	public static ClientPacket fromCommand(Command command) {
-		return fromCommand(command, ClientPacketType.fromCommand(command));
+	public static ClientPacket fromCommand(Command command, Client handler) {
+		return fromCommand(command, ClientPacketType.fromCommand(command), handler);
 	}
 
 	public static ClientPacket fromCommand(Command command,
-			ClientPacketType type) {
+			ClientPacketType type, Client handler) {
 		try {
 			return (ClientPacket) type.getPacketClass()
-					.getDeclaredMethod("fromCommand", Command.class)
-					.invoke(null, command);
+					.getDeclaredMethod("fromCommand", Command.class, Client.class)
+					.invoke(null, command, handler);
 		} catch (InvocationTargetException e) {
 			if (e.getCause() instanceof RuntimeException) {
 				throw (RuntimeException) e.getCause();

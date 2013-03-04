@@ -1,4 +1,4 @@
-package server;
+package client;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -7,8 +7,6 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.Calendar;
 
-import client.packet.ClientPacket;
-
 import common.Packet;
 import common.Payload;
 
@@ -16,11 +14,11 @@ import server.packet.ServerPacket;
 
 public class UDPReciever implements Runnable {
 	private final DatagramSocket socket;
-	private final Server handler;
+	private final Client handler;
 	private int bufferSize = 1024;
 	private static final String SUCCESS_MSG_FMT = "Receiving at port %d ...";
 
-	public UDPReciever(DatagramSocket socket, Server handler) {
+	public UDPReciever(DatagramSocket socket, Client handler) {
 		this.socket = socket;
 		this.handler = handler;
 	}
@@ -41,13 +39,13 @@ public class UDPReciever implements Runnable {
 					socket.receive(packet);
 					String ip = packet.getAddress().getHostAddress();
 					int port = packet.getPort();
-					Payload payload = new Payload(new String(buffer, 0, packet.getLength()));
+					Payload cmd = new Payload(new String(buffer, 0, packet.getLength()));
 					System.out.println("["
 							+ Calendar.getInstance().getTimeInMillis()
 							+ "] Receive from sender (IP: " + ip + ", Port: "
 							+ String.valueOf(port) + "): "
-							+ payload);
-					ClientPacket p = ClientPacket.fromPayload(payload);
+							+ cmd);
+					ServerPacket p = ServerPacket.fromPayload(cmd);
 					handler.respond(p);
 				} catch (IOException e) {
 					e.printStackTrace();
