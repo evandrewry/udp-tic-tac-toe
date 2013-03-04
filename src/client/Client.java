@@ -6,9 +6,15 @@ import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
+import com.sun.corba.se.spi.orbutil.threadpool.ThreadPool;
+
+import server.UDPReciever;
 import server.packet.ServerPacket;
 import client.packet.ClientPacket;
 
@@ -16,11 +22,18 @@ import common.User;
 
 import exception.BadPacketException;
 
-public class Client implements Runnable {
+public class Client {
+	private final DatagramSocket socket;
+	private final ExecutorService pool;
 	private static User currentUser;
 	private static final String PROMPT = ">>> ";
 	private static final String receiverIP = "localhost";
 	private static final int receiverPort = 4119;
+	
+	private Client() throws IOException {
+		socket = new DatagramSocket(4119);
+		pool = Executors.newFixedThreadPool(1);
+	}
 
 	private ClientPacket respond(ServerPacket packet) {
 		switch (packet.getPacketType()) {
@@ -45,65 +58,25 @@ public class Client implements Runnable {
 		}
 	}
 
-	private static void loop(DatagramSocket socket) {
-		// Begin to send
-		BufferedReader input = new BufferedReader(new InputStreamReader(
-				System.in));
+	private void loop(DatagramSocket socket) {
 
-		byte[] buffer;
-		while (true) {
-			System.out.print(PROMPT);
-
-			String inputString;
-			try {
-				inputString = input.readLine();
-			} catch (IOException e) {
-				socket.close();
-				e.printStackTrace();
-				continue;
-			}
-
-			buffer = inputString.getBytes();
-			DatagramPacket sendPacket;
-			try {
-				sendPacket = new DatagramPacket(buffer, buffer.length,
-						InetAddress.getByName(receiverIP), receiverPort);
-			} catch (UnknownHostException e) {
-				socket.close();
-				e.printStackTrace();
-				continue;
-			}
-
-			try {
-				socket.send(sendPacket);
-			} catch (IOException e) {
-				socket.close();
-				e.printStackTrace();
-				continue;
-			}
-
-			System.out.println("Sent to server: " + inputString);
-		}
-	}
-
-	@Override
-	public void run() {
-		// Create DatagramSocket
-		DatagramSocket socket;
-		try {
-			socket = new DatagramSocket();
-			loop(socket);
-		} catch (SocketException e) {
-			e.printStackTrace();
-		}
 	}
 
 	private ClientPacket ackResponse(ServerPacket packet) {
 		return null;
 	}
 
-	public static void main(String[] args) {
-		new Thread(new Client()).start();
+	public static void main(String[] args) throws IOException {
+		Client c = new Client();
+		c.loop(socket);
+	}
+	
+	public void recieve() throws SocketException {
+		pool.execute(new UDPReciever(new DatagramSocket()));
+	}
+	
+	public void send() {
+		pool.execute(new UDPSender());
 	}
 
 	public static void mocklogin(String username, int port) {

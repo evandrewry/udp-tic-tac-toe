@@ -12,7 +12,7 @@ public class TicTacToeCell {
 			this.state = state;
 			return true;
 		} else {
-			return false;
+			throw new IllegalMoveException();
 		}
 	}
 

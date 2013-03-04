@@ -3,22 +3,23 @@ package server;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.Socket;
 import java.net.SocketException;
 import java.util.Calendar;
 
 public class UDPReciever implements Runnable {
-	private int port = 4119;
+	private final DatagramSocket socket;
 	private int bufferSize = 1024;
 	private static final String SUCCESS_MSG_FMT = "Receiving at port %d ...";
 
+	public UDPReciever(DatagramSocket socket) {
+		this.socket = socket;
+	}
+
 	@Override
 	public void run() {
-		// Create a DatagramSocket to receive UDP packets
-		DatagramSocket socket;
-		try {
-			socket = new DatagramSocket(port);
-
-			System.out.printf(SUCCESS_MSG_FMT, port);
+		while (true) {
+			System.out.printf(SUCCESS_MSG_FMT, socket.getLocalPort());
 
 			/*
 			 * Begin to receive UDP packet No connection is set up for UDP
@@ -40,8 +41,6 @@ public class UDPReciever implements Runnable {
 					e.printStackTrace();
 				}
 			}
-		} catch (SocketException e) {
-			e.printStackTrace();
 		}
 	}
 }
