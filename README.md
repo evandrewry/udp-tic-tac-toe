@@ -16,11 +16,21 @@ To start a client, run
 $ java -jar Client.jar <server-ip> <server-port>
 ```
 
+
+
 Client commands:
+================
+
 login <username> : log in the client under this username
+
 ls : retrieve the list of currently online users
+
 choose <username> : send a play request to this user
+
 accept <username> : accept a play request from this user
+
 deny <username> : deny a play request from this user
+
 play <cellNo> : place an X or O on the specified cell
+
 logout : log out of server
