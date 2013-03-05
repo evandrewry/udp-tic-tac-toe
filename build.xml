@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project basedir="." default="build" name="udp-tic-tac-toe">
+<project basedir="." default="jars" name="udp-tic-tac-toe">
     <property environment="env"/>
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.6"/>
@@ -36,7 +36,7 @@
             <classpath refid="udp-tic-tac-toe.classpath"/>
         </java>
     </target>
-    <target name="server-jar">
+    <target depends="build" name="server-jar">
         <echo message="Creating Server.jar ..." level="info" />
         <jar destfile="./Server.jar" filesetmanifest="mergewithoutmain">
             <manifest>
@@ -46,7 +46,7 @@
             <fileset dir="./bin"/>
         </jar>
     </target>
-    <target name="client-jar">
+    <target depends="build" name="client-jar">
         <echo message="Creating Client.jar ..." level="info" />
         <jar destfile="./Client.jar" filesetmanifest="mergewithoutmain">
             <manifest>
@@ -56,4 +56,5 @@
             <fileset dir="./bin"/>
         </jar>
     </target>
+    <target depends="client-jar,server-jar" name="jars" />
 </project>
