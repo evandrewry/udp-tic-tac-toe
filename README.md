@@ -1,3 +1,12 @@
+Evan Drewry (ewd2106)
+
+Programming Assignment 1
+
+COMS W4119 - Computer Networks
+
+Spring 2013, Columbia Univ.
+
+
 udp-tic-tac-toe
 ===============
 
