@@ -1,7 +1,5 @@
 package server.packet;
 
-import game.GameResultType;
-
 import java.util.HashMap;
 import java.util.Map;
 

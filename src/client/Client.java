@@ -27,7 +27,6 @@ public class Client {
 	private final DatagramSocket socket;
 	private final ExecutorService pool;
 	private User currentUser;
-	private static final String PROMPT = ">>> ";
 	private final String receiverIP;
 	private final int receiverPort;
 
@@ -67,6 +66,8 @@ public class Client {
 		case DRAW: message += " draw"; break;
 		case LOSS: message += " lose"; break;
 		case WIN: message += " win"; break;
+		default:
+			break;
 		}
 		System.out.println(message);
 		return null;
@@ -112,12 +113,6 @@ public class Client {
 	    recieve();
 	}
 
-	private ClientPacket ackResponse(ServerPacket packet) {
-		return null;
-	}
-
-
-
 	public void recieve() throws SocketException {
 		pool.execute(new UDPReciever(socket, this));
 	}
@@ -144,7 +139,7 @@ public class Client {
     
     
 	public static void main(String[] args) throws IOException {
-		Client c = new Client("localhost", 4119);
+		Client c = new Client("localhost", 4312);
 		c.run();
 	}
 }

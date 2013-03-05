@@ -50,7 +50,7 @@ public class CurrentGameStatePacket extends ServerPacket {
 	}
 
 	public String toFormattedString() {
-		String s = state.replace('0', '-');
+		String s = state.replace('0', '_');
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 3; i++) {
 			sb.append(s.substring(i * 3, i * 3 + 3)).append('\n');

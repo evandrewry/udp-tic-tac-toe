@@ -3,7 +3,7 @@ package game;
 public class TicTacToeBoard {
 	private static int BOARD_WIDTH = 3;
 	private static int BOARD_HEIGHT = 3;
-	private TicTacToeCell[][] board = new TicTacToeCell[BOARD_WIDTH][BOARD_HEIGHT];
+	private TicTacToeCell[][] board = new TicTacToeCell[BOARD_HEIGHT][BOARD_WIDTH];
 
 	public TicTacToeBoard() {
 		for (int i = 0; i < BOARD_HEIGHT; i++) {
@@ -75,7 +75,7 @@ public class TicTacToeBoard {
 		}
 		
 		for (int i = 0; i < BOARD_WIDTH; i++) {
-			if (board[i][2 - i].getState() != xo) {
+			if (board[2 - i][i].getState() != xo) {
 				return false;
 			}
 		}
@@ -108,7 +108,7 @@ public class TicTacToeBoard {
 
 		// check column
 		for (int i = 0; i < BOARD_HEIGHT; i++) {
-			if (board[x][i].getState() != xo) {
+			if (board[i][x].getState() != xo) {
 				return false;
 			}
 		}
@@ -124,7 +124,7 @@ public class TicTacToeBoard {
 
 		// check row
 		for (int i = 0; i < BOARD_WIDTH; i++) {
-			if (board[i][y].getState() != xo) {
+			if (board[y][i].getState() != xo) {
 				wins = false;
 			}
 		}

@@ -48,16 +48,24 @@ public class UserList extends TreeMap<String, User> {
 		}
 		return s.toString();
 	}
-	
+
 	public String toFormattedString() {
 		StringBuilder s = new StringBuilder();
-		boolean fst = true;
 		for (User u : values()) {
-			if (!fst || (fst = false))
-				s.append("\n");
 			s.append(u.getUsername()).append(" ")
-					.append(u.getState().toString());
+					.append(u.getState().toString()).append('\n');
 		}
+		s.append("EOL");
 		return s.toString();
+	}
+
+	public boolean moreThanNOnlineWithSameIp(int n, String ip) {
+		int count = 0;
+		for (User u : values()) {
+			if (u.getIp().equals(ip)) {
+				count++;
+			}
+		}
+		return count >= n;
 	}
 }

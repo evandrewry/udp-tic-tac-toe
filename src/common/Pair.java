@@ -25,11 +25,4 @@ public class Pair<LEFT, RIGHT> {
 		this.right = right;
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		return o instanceof Pair
-				&& this.left.equals(((Pair<LEFT, RIGHT>) o).left)
-				&& this.right.equals(((Pair<LEFT, RIGHT>) o).right);
-	}
-
 }

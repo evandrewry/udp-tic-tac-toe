@@ -81,7 +81,7 @@ public class ClientPacketTest {
 
 	@Test(expected = BadPacketException.class)
 	public void testFromPayload() {
-		Packet p = ClientPacket.fromPayload(new Payload("poop"));
+		ClientPacket.fromPayload(new Payload("poop"));
 	}
 
 	@Test

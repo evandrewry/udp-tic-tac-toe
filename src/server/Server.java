@@ -33,6 +33,7 @@ import client.packet.impl.AcceptRequestPacket;
 import client.packet.impl.ChoosePlayerPacket;
 import client.packet.impl.DenyRequestPacket;
 import client.packet.impl.LoginPacket;
+import client.packet.impl.LogoutPacket;
 import client.packet.impl.PlayGamePacket;
 
 import common.Payload;
@@ -67,10 +68,30 @@ public class Server {
 		case PLAY_GAME:
 			return handlePlay((PlayGamePacket) packet);
 		case LOGOUT:
-			return null;
+			return handleLogout((LogoutPacket) packet);
 		default:
 			throw new BadPacketException("Unrecognized packet format");
 		}
+	}
+
+	private ServerPacket handleLogout(LogoutPacket packet) {
+		//get user
+		User u = currentUsers.get(packet.getUsername());
+		
+		//null check
+		if (u == null) return null;
+		
+		//end any games
+		Game g = u.getCurrentGame();
+		if (g != null) {
+			u.getCurrentGame().terminate();
+			currentGames.remove(g);
+		}
+		
+		//set user state
+		u.setState(UserState.OFFLINE);
+		
+		return null;
 	}
 
 	private ServerPacket handlePlay(PlayGamePacket packet) {
@@ -118,6 +139,8 @@ public class Server {
 					e.printStackTrace();
 				}
 				return null;
+			default:
+				break;
 			}
 		} catch (IllegalMoveException e) {
 			return new IllegalMovePacket(IllegalMoveType.OCCUPIED);
@@ -219,6 +242,11 @@ public class Server {
 		}
 
 		if (u.getState() == UserState.OFFLINE) {
+			//check for maximum of five online from same IP, fail if so
+			if (currentUsers.moreThanNOnlineWithSameIp(5, ip)) {
+				return new LoginAcknowledgementPacket(
+						LoginAcknowledgementType.FAILURE);
+			}
 			// login success for offline/newly registered user
 			u.setState(UserState.FREE);
 			return new LoginAcknowledgementPacket(
@@ -264,7 +292,7 @@ public class Server {
 	}
 
 	public void respond(DatagramPacket p) throws UnknownHostException {
-		Payload payload = new Payload(new String(p.getData(), 0, p.getLength()));
+		Payload payload = new Payload(new String(p.getData(), 0, p.getLength()).trim());
 		ClientPacket cp = ClientPacket.fromPayload(payload);
 
 		ack(cp, p);
