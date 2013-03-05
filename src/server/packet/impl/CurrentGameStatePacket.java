@@ -8,12 +8,17 @@ import server.packet.ServerPacket;
 import common.Payload;
 
 import exception.BadPacketException;
+import game.Game;
 
 public class CurrentGameStatePacket extends ServerPacket {
 	private String state;
 	public static final String PACKET_FORMAT = "play,%s";
 	public static final Pattern PACKET_PATTERN = Pattern
 			.compile("^play,(\\d+)$");
+
+	public CurrentGameStatePacket(Game g) {
+		this.state = g.toString();
+	}
 
 	public CurrentGameStatePacket(String state) {
 		this.state = state;

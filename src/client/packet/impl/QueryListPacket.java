@@ -14,7 +14,15 @@ import exception.BadPacketException;
 import exception.InvalidCommandParametersException;
 
 public class QueryListPacket extends ClientPacket {
-	private long packetId;
+	public long getPacketId() {
+		return this.packetId;
+	}
+
+	@Override
+	public String getUsername() {
+		return this.username;
+	}
+	private final long packetId;
 	private String username;
 
 	public static final String PACKET_FORMAT = "list,%d,%s";

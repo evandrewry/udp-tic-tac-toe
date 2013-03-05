@@ -6,16 +6,18 @@ public class User implements Comparable<User> {
 	private String username;
 	private UserState state;
 	private Game currentGame;
+	private String ip;
 	private int port;
 
-	public User(String username, UserState state, int port) {
+	public User(String username, UserState state, String ip, int port) {
 		this.username = username;
 		this.state = state;
+		this.ip = ip;
 		this.port = port;
 	}
 
-	public User(String username, int port) {
-		this(username, UserState.OFFLINE, port);
+	public User(String username, String ip, int port) {
+		this(username, UserState.OFFLINE, ip, port);
 	}
 
 	public String getUsername() {
@@ -53,5 +55,8 @@ public class User implements Comparable<User> {
 
 	public int getPort() {
 		return port;
+	}
+	public String getIp() {
+		return ip;
 	}
 }

@@ -14,9 +14,22 @@ import exception.BadPacketException;
 import exception.InvalidCommandParametersException;
 
 public class PlayGamePacket extends ClientPacket {
-	private long packetId;
-	private String username;
-	private int number;
+	public long getPacketId() {
+		return this.packetId;
+	}
+
+	@Override
+	public String getUsername() {
+		return this.username;
+	}
+	
+	public int getCellNumber() {
+		return number;
+	}
+	
+	private final long packetId;
+	private final String username;
+	private final int number;
 	public static final String PACKET_FORMAT = "play,%d,%s,%d";
 	public static final Pattern PACKET_PATTERN = Pattern
 			.compile("^play,(\\d+),(\\w+),(\\d+)$");

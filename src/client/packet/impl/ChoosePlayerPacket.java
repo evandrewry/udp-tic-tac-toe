@@ -18,6 +18,10 @@ public class ChoosePlayerPacket extends ClientPacket {
 		return this.packetId;
 	}
 
+	@Override
+	public String getUsername() {
+		return this.sender;
+	}
 	public String getSender() {
 		return this.sender;
 	}

@@ -72,9 +72,8 @@ public class LoginPacket extends ClientPacket {
 		if (m.matches()) {
 			long packetId = Packet.nextId();
 			String username = m.group(1);
-			int port = handler.getPort();
-			handler.login(username, port);
-			return new LoginPacket(packetId, username, port);
+			handler.login(username, handler.getIP(), handler.getPort());
+			return new LoginPacket(packetId, username, handler.getPort());
 		} else {
 			throw new InvalidCommandParametersException("Could not parse.");
 		}

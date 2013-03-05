@@ -1,18 +1,10 @@
 package client;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.ServerSocket;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import com.sun.corba.se.spi.orbutil.threadpool.ThreadPool;
 
 import server.packet.ServerPacket;
 import client.packet.ClientPacket;
@@ -79,8 +71,8 @@ public class Client {
 		pool.execute(new UDPSender(new DatagramSocket(), receiverIP, receiverPort, this));
 	}
 
-	public void login(String username, int port) {
-		currentUser = new User(username, port);
+	public void login(String username, String ip, int port) {
+		currentUser = new User(username, ip, port);
 	}
 
 	public User getCurrentUser() {
@@ -89,6 +81,10 @@ public class Client {
 
     public int getPort() {
         return socket.getLocalPort();
+    }
+    
+    public String getIP() {
+    	return socket.getLocalAddress().getHostAddress();
     }
 
 }

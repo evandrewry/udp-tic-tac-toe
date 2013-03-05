@@ -19,25 +19,42 @@ public class TicTacToeBoard {
 		return board[x][y];
 	}
 
-	public boolean maybeSetCell(int cellNo, TicTacToeCellState xo) {
+	public GameResultType maybeSetCell(int cellNo, TicTacToeCellState xo) {
 		return maybeSetCell(cellNo % 3, cellNo / 3, xo);
 	}
 
-	public boolean maybeSetCell(int x, int y, TicTacToeCellState xo) {
+	public GameResultType maybeSetCell(int x, int y, TicTacToeCellState xo) {
 		assert xo != TicTacToeCellState._;
 		assert x < BOARD_WIDTH;
 		assert y < BOARD_HEIGHT;
 
 		board[y][x].maybeSet(xo);
-		return wins(x, y, xo);
+		return result(x, y, xo);
 	}
 
-	private boolean wins(int x, int y, TicTacToeCellState xo) {
+	private GameResultType result(int x, int y, TicTacToeCellState xo) {
 		assert xo != TicTacToeCellState._;
 		assert x < BOARD_WIDTH;
 		assert y < BOARD_HEIGHT;
 
-		return winsRow(y, xo) || winsColumn(x, xo) || winsDiagonal(x, y, xo);
+		if (winsRow(y, xo) || winsColumn(x, xo) || winsDiagonal(x, y, xo)){
+			return GameResultType.WIN;
+		} else if (isDraw()) {
+			return GameResultType.DRAW;
+		} else {
+			return GameResultType.IN_PROGRESS;
+		}
+	}
+
+	private boolean isDraw() {
+		for (int i = 0; i < BOARD_HEIGHT; i++) {
+			for (int j = 0; j < BOARD_WIDTH; j++) {
+				if (board[i][j].getState() == TicTacToeCellState._) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	private boolean winsDiagonal(int x, int y, TicTacToeCellState xo) {

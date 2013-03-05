@@ -7,6 +7,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Calendar;
 
 import client.packet.ClientPacket;
 
@@ -61,7 +62,10 @@ public class UDPSender implements Runnable {
 				continue;
 			}
 
-			System.out.println("Sent to server: " + inputString);
+			System.out.println("["
+					+ Calendar.getInstance().getTimeInMillis()
+					+ "] Sent to server: (IP: " + receiverIP + ", Port: "
+					+ String.valueOf(receiverPort) + "): " + inputString);
 		}
 	}
 

@@ -27,7 +27,7 @@ public class ClientPacketTest {
 	@Before
 	public void setUp() throws IOException {
 	    client = new Client();
-		client.login("evan", 4119);
+		client.login("evan", "localhost", 4119);
 	}
 
 	@Test(expected = InvalidCommandParametersException.class)

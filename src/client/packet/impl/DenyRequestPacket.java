@@ -14,6 +14,21 @@ import exception.BadPacketException;
 import exception.InvalidCommandParametersException;
 
 public class DenyRequestPacket extends ClientPacket {
+	public long getPacketId() {
+		return this.packetId;
+	}
+
+	@Override
+	public String getUsername() {
+		return this.sender;
+	}
+	public String getSender() {
+		return this.sender;
+	}
+
+	public String getReciever() {
+		return this.reciever;
+	}
 	private final long packetId;
 	private final String sender;
 	private final String reciever;

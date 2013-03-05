@@ -3,14 +3,11 @@ package client;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.Socket;
-import java.net.SocketException;
 import java.util.Calendar;
 
-import common.Packet;
-import common.Payload;
-
 import server.packet.ServerPacket;
+
+import common.Payload;
 
 public class UDPReciever implements Runnable {
 	private final DatagramSocket socket;

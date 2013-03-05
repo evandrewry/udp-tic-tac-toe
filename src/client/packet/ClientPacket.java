@@ -16,7 +16,11 @@ public abstract class ClientPacket extends Packet {
 	public abstract String getCommand();
 
 	public abstract Pattern getCommandPattern();
-
+	
+	public abstract long getPacketId();
+	
+	public abstract String getUsername();
+	
 	public boolean isValidCommmand(String inputCommand) {
 		return getCommandPattern().matcher(inputCommand).matches();
 	}

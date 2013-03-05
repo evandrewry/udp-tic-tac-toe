@@ -10,13 +10,13 @@ import common.Payload;
 import exception.BadPacketException;
 
 public class AcknowledgementPacket extends ServerPacket {
-	private int packetId;
+	private final long packetId;
 	public static final String PACKET_FORMAT = "ack,%d";
 	public static final Pattern PACKET_PATTERN = Pattern
 			.compile("^ack,(\\d+)$");
 
-	public AcknowledgementPacket(int packetId) {
-		this.packetId = packetId;
+	public AcknowledgementPacket(long l) {
+		this.packetId = l;
 	}
 
 	@Override

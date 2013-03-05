@@ -14,6 +14,16 @@ import exception.BadPacketException;
 import exception.InvalidCommandParametersException;
 
 public class AcceptRequestPacket extends ClientPacket {
+	public long getPacketId() {
+		return this.packetId;
+	}
+	public String getSender() {
+		return this.sender;
+	}
+
+	public String getReciever() {
+		return this.reciever;
+	}
 	private final long packetId;
 	private final String sender;
 	private final String reciever;
@@ -83,5 +93,10 @@ public class AcceptRequestPacket extends ClientPacket {
 		} else {
 			throw new InvalidCommandParametersException("Could not parse.");
 		}
+	}
+
+	@Override
+	public String getUsername() {
+		return this.sender;
 	}
 }

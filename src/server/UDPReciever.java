@@ -3,16 +3,11 @@ package server;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.Socket;
-import java.net.SocketException;
 import java.util.Calendar;
 
 import client.packet.ClientPacket;
 
-import common.Packet;
 import common.Payload;
-
-import server.packet.ServerPacket;
 
 public class UDPReciever implements Runnable {
 	private final DatagramSocket socket;
@@ -47,8 +42,7 @@ public class UDPReciever implements Runnable {
 							+ "] Receive from sender (IP: " + ip + ", Port: "
 							+ String.valueOf(port) + "): "
 							+ payload);
-					ClientPacket p = ClientPacket.fromPayload(payload);
-					handler.respond(p);
+					handler.respond(packet);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
