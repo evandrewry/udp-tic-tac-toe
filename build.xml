@@ -1,10 +1,53 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="build" name="udp-tic-tac-toe">
-    <target name="build" depends="server,client">
+<project basedir="." default="build" name="udp-tic-tac-toe">
+    <property environment="env"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.6"/>
+    <property name="source" value="1.6"/>
+    <path id="udp-tic-tac-toe.classpath">
+        <pathelement location="bin"/>
+        <path refid="JUnit 4.libraryclasspath"/>
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="test">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
     </target>
-    <target name="server">
-        <echo message="Compiling Server.jar ..." level="info" />
-    	<mkdir dir="./bin" />
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="init" name="build">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="udp-tic-tac-toe.classpath"/>
+        </javac>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
+            <src path="test"/>
+            <classpath refid="udp-tic-tac-toe.classpath"/>
+        </javac>
+    </target>
+    <target name="Client">
+        <java classname="client.Client" failonerror="true" fork="yes">
+            <classpath refid="udp-tic-tac-toe.classpath"/>
+        </java>
+    </target>
+    <target name="Server">
+        <java classname="server.Server" failonerror="true" fork="yes">
+            <classpath refid="udp-tic-tac-toe.classpath"/>
+        </java>
+    </target>
+    <target name="server-jar">
+        <echo message="Creating Server.jar ..." level="info" />
         <jar destfile="./Server.jar" filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Main-Class" value="server.Server"/>
@@ -13,9 +56,8 @@
             <fileset dir="./bin"/>
         </jar>
     </target>
-    <target name="client">
-        <echo message="Compiling Client.jar ..." level="info" />
-    	<mkdir dir="./bin" />
+    <target name="client-jar">
+        <echo message="Creating Client.jar ..." level="info" />
         <jar destfile="./Client.jar" filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Main-Class" value="client.Client"/>
