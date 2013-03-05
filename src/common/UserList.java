@@ -69,7 +69,7 @@ public class UserList extends TreeMap<String, User> {
     public String toFormattedString() {
         StringBuilder s = new StringBuilder();
         for (User u : values()) {
-            s.append(u.getUsername()).append(" ").append(u.getState().toString()).append('\n');
+            s.append(u.getUsername()).append(" ").append(u.getState().name()).append('\n');
         }
         s.append("EOL");
         return s.toString();

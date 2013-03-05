@@ -12,6 +12,7 @@ import server.packet.ServerPacket;
 import server.packet.impl.CurrentGameStatePacket;
 import server.packet.impl.CurrentUsersListPacket;
 import server.packet.impl.GameResultPacket;
+import server.packet.impl.IllegalMovePacket;
 import server.packet.impl.LoginAcknowledgementPacket;
 import server.packet.impl.PlayRequestAcknowledgementPacket;
 import server.packet.impl.PlayRequestPacket;
@@ -108,7 +109,7 @@ public class Client {
                 handleGameResult((GameResultPacket) packet);
                 return;
             case ILLEGAL_MOVE:
-                return;
+                handleIllegalMove((IllegalMovePacket) packet);
             case LOGIN_ACK:
                 handleLoginAck((LoginAcknowledgementPacket) packet);
                 return;
@@ -121,6 +122,10 @@ public class Client {
             default:
                 throw new BadPacketException("Unrecognized packet format");
         }
+    }
+
+    private void handleIllegalMove(IllegalMovePacket packet) {
+        System.out.println(packet.toFormattedString());
     }
 
     /**

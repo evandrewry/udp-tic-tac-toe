@@ -49,4 +49,12 @@ public class IllegalMovePacket extends ServerPacket {
     public Object[] getParameters() {
         return new Object[] { type.getCode() };
     }
+
+    public String toFormattedString() {
+        switch (type) {
+            case OCCUPIED: return "occupied";
+            case OUT_OF_TURN: return "out of turn";
+            default: return null;
+        }
+    }
 }
