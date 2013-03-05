@@ -139,6 +139,11 @@ public class Server {
         User sender = currentUsers.get(packet.getSender());
         User receiver = currentUsers.get(packet.getReciever());
 
+        //null check
+        if (sender == null || receiver == null) {
+            return null;
+        }
+
         //set states to busy
         sender.setState(UserState.BUSY);
         receiver.setState(UserState.BUSY);
@@ -175,6 +180,11 @@ public class Server {
         //look up users
         User sender = currentUsers.get(packet.getSender());
         User receiver = currentUsers.get(packet.getReciever());
+
+        //null check
+        if (sender == null || receiver == null) {
+            return null;
+        }
 
         //set states to free
         sender.setState(UserState.FREE);
