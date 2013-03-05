@@ -6,17 +6,11 @@
     <property name="source" value="1.6"/>
     <path id="udp-tic-tac-toe.classpath">
         <pathelement location="bin"/>
-        <path refid="JUnit 4.libraryclasspath"/>
     </path>
     <target name="init">
         <mkdir dir="bin"/>
         <copy includeemptydirs="false" todir="bin">
             <fileset dir="src">
-                <exclude name="**/*.java"/>
-            </fileset>
-        </copy>
-        <copy includeemptydirs="false" todir="bin">
-            <fileset dir="test">
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
