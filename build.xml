@@ -4,22 +4,22 @@
     </target>
     <target name="server">
         <echo message="Compiling Server.jar ..." level="info" />
-        <jar destfile="/Users/evan/git/udp-tictactoe/Server.jar" filesetmanifest="mergewithoutmain">
+        <jar destfile="./Server.jar" filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Main-Class" value="server.Server"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
-            <fileset dir="/Users/evan/git/udp-tictactoe/bin"/>
+            <fileset dir="./bin"/>
         </jar>
     </target>
     <target name="client">
         <echo message="Compiling Client.jar ..." level="info" />
-        <jar destfile="/Users/evan/git/udp-tictactoe/Client.jar" filesetmanifest="mergewithoutmain">
+        <jar destfile="./Client.jar" filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Main-Class" value="client.Client"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
-            <fileset dir="/Users/evan/git/udp-tictactoe/bin"/>
+            <fileset dir="./bin"/>
         </jar>
     </target>
 </project>
