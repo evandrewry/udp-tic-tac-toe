@@ -1,8 +1,5 @@
 package server.packet.impl;
 
-import exception.BadPacketException;
-import game.Game;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,9 +7,28 @@ import server.packet.ServerPacket;
 
 import common.Payload;
 
+import exception.BadPacketException;
+import game.Game;
+
+/**
+ * Packet with current game board in payload
+ *
+ * @author evan
+ *
+ */
 public class CurrentGameStatePacket extends ServerPacket {
+    public static CurrentGameStatePacket fromPayload(Payload payload) {
+        Matcher m = PACKET_PATTERN.matcher(payload.content);
+        if (m.matches()) {
+            String state = m.group(1);
+            return new CurrentGameStatePacket(state);
+        } else {
+            throw new BadPacketException("Could not parse.");
+        }
+    }
     private String state;
     public static final String PACKET_FORMAT = "play,%s";
+
     public static final Pattern PACKET_PATTERN = Pattern.compile("^play,(\\d+)$");
 
     public CurrentGameStatePacket(Game g) {
@@ -36,16 +52,6 @@ public class CurrentGameStatePacket extends ServerPacket {
     @Override
     public Object[] getParameters() {
         return new Object[] { state };
-    }
-
-    public static CurrentGameStatePacket fromPayload(Payload payload) {
-        Matcher m = PACKET_PATTERN.matcher(payload.content);
-        if (m.matches()) {
-            String state = m.group(1);
-            return new CurrentGameStatePacket(state);
-        } else {
-            throw new BadPacketException("Could not parse.");
-        }
     }
 
     public String toFormattedString() {

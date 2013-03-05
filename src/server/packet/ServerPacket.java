@@ -7,11 +7,18 @@ import common.Payload;
 
 import exception.BadPacketException;
 
+/**
+ * A server-side packet
+ *
+ * @author evan
+ *
+ */
 public abstract class ServerPacket extends Packet {
-    public ServerPacketType getPacketType() {
-        return ServerPacketType.fromClass(getClass());
-    }
-
+    /**
+     * factory method to create packet objects from udp payload
+     * @param payload
+     * @return
+     */
     public static ServerPacket fromPayload(Payload payload) {
         for (ServerPacketType t : ServerPacketType.values()) {
             try {
@@ -23,6 +30,12 @@ public abstract class ServerPacket extends Packet {
         throw new BadPacketException("Could not parse packet.");
     }
 
+    /**
+     * factory method to create packet objects from udp payload
+     * @param payload
+     * @param type
+     * @return
+     */
     public static ServerPacket fromPayload(Payload payload, ServerPacketType type) {
         try {
             return (ServerPacket) type.getPacketClass().getDeclaredMethod("fromPayload", Payload.class)
@@ -43,5 +56,12 @@ public abstract class ServerPacket extends Packet {
             e.printStackTrace();
         }
         throw new IllegalStateException();
+    }
+
+    /**
+     * @return the {@link ServerPacketType} associated with this packet
+     */
+    public ServerPacketType getPacketType() {
+        return ServerPacketType.fromClass(getClass());
     }
 }

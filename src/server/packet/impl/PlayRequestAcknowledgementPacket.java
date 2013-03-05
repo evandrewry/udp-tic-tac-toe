@@ -10,23 +10,32 @@ import common.Payload;
 
 import exception.BadPacketException;
 
+/**
+ * ackplay packet
+ *
+ * @author evan
+ *
+ */
 public class PlayRequestAcknowledgementPacket extends ServerPacket {
+    public static PlayRequestAcknowledgementPacket fromPayload(Payload payload) {
+        Matcher m = PACKET_PATTERN.matcher(payload.content);
+        if (m.matches()) {
+            String username = m.group(1);
+            PlayRequestAcknowledgementStatus status = PlayRequestAcknowledgementStatus.fromCode(m.group(2));
+            return new PlayRequestAcknowledgementPacket(username, status);
+        } else {
+            throw new BadPacketException("Could not parse.");
+        }
+    }
     private final String username;
     private final PlayRequestAcknowledgementStatus status;
     public static final String PACKET_FORMAT = "ackchoose,%s,%s";
+
     public static final Pattern PACKET_PATTERN = Pattern.compile("^ackchoose,(\\w+),(\\w+)$");
 
     public PlayRequestAcknowledgementPacket(String username, PlayRequestAcknowledgementStatus status) {
         this.username = username;
         this.status = status;
-    }
-
-    public PlayRequestAcknowledgementStatus getStatus() {
-        return this.status;
-    }
-
-    public String getUsername() {
-        return this.username;
     }
 
     @Override
@@ -44,15 +53,12 @@ public class PlayRequestAcknowledgementPacket extends ServerPacket {
         return new Object[] { username, status.getCode() };
     }
 
-    public static PlayRequestAcknowledgementPacket fromPayload(Payload payload) {
-        Matcher m = PACKET_PATTERN.matcher(payload.content);
-        if (m.matches()) {
-            String username = m.group(1);
-            PlayRequestAcknowledgementStatus status = PlayRequestAcknowledgementStatus.fromCode(m.group(2));
-            return new PlayRequestAcknowledgementPacket(username, status);
-        } else {
-            throw new BadPacketException("Could not parse.");
-        }
+    public PlayRequestAcknowledgementStatus getStatus() {
+        return this.status;
+    }
+
+    public String getUsername() {
+        return this.username;
     }
 
     public String toFormattedString() {

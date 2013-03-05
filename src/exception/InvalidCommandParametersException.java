@@ -1,5 +1,11 @@
 package exception;
 
+/**
+ * Thrown when command is recognized but its parameters cannot be parsed.
+ *
+ * @author evan
+ *
+ */
 public class InvalidCommandParametersException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
@@ -11,12 +17,12 @@ public class InvalidCommandParametersException extends RuntimeException {
         super(arg0);
     }
 
-    public InvalidCommandParametersException(Throwable arg0) {
-        super(arg0);
-    }
-
     public InvalidCommandParametersException(String arg0, Throwable arg1) {
         super(arg0, arg1);
+    }
+
+    public InvalidCommandParametersException(Throwable arg0) {
+        super(arg0);
     }
 
 }

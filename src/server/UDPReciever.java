@@ -3,15 +3,23 @@ package server;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.UnknownHostException;
 import java.util.Calendar;
 
 import common.Payload;
 
+/**
+ * server UDP reciever that receives packets from the client and notifies server so it can respond
+ *
+ * @author evan
+ *
+ */
 public class UDPReciever implements Runnable {
     private final DatagramSocket socket;
     private final Server handler;
-    private int bufferSize = 1024;
-    private static final String SUCCESS_MSG_FMT = "Receiving at port %d ...";
+    private static final int BUFFER_SIZE = 1024;
+
+    private static final String SUCCESS_MSG_FMT = "Receiving at port %d ...\n";
 
     public UDPReciever(DatagramSocket socket, Server handler) {
         this.socket = socket;
@@ -26,7 +34,7 @@ public class UDPReciever implements Runnable {
             /*
              * Begin to receive UDP packet No connection is set up for UDP
              */
-            byte[] buffer = new byte[bufferSize];
+            byte[] buffer = new byte[BUFFER_SIZE];
             while (true) {
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
                 try {
@@ -37,6 +45,8 @@ public class UDPReciever implements Runnable {
                     System.out.println("[" + Calendar.getInstance().getTimeInMillis() + "] Receive from sender (IP: "
                             + ip + ", Port: " + String.valueOf(port) + "): " + payload);
                     handler.respond(packet);
+                } catch (UnknownHostException e) {
+                    System.out.println("unknown host...");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

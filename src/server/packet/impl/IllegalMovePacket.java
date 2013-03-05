@@ -10,9 +10,25 @@ import common.Payload;
 
 import exception.BadPacketException;
 
+/**
+ * Packet indicating an illegal move was made.
+ *
+ * @author evan
+ *
+ */
 public class IllegalMovePacket extends ServerPacket {
+    public static IllegalMovePacket fromPayload(Payload payload) {
+        Matcher m = PACKET_PATTERN.matcher(payload.content);
+        if (m.matches()) {
+            IllegalMoveType type = IllegalMoveType.fromCode(m.group(1));
+            return new IllegalMovePacket(type);
+        } else {
+            throw new BadPacketException("Could not parse.");
+        }
+    }
     private final IllegalMoveType type;
     public static final String PACKET_FORMAT = "ackplay,%s";
+
     public static final Pattern PACKET_PATTERN = Pattern.compile("^ackplay,(\\w+)$");
 
     public IllegalMovePacket(IllegalMoveType type) {
@@ -32,15 +48,5 @@ public class IllegalMovePacket extends ServerPacket {
     @Override
     public Object[] getParameters() {
         return new Object[] { type.getCode() };
-    }
-
-    public static IllegalMovePacket fromPayload(Payload payload) {
-        Matcher m = PACKET_PATTERN.matcher(payload.content);
-        if (m.matches()) {
-            IllegalMoveType type = IllegalMoveType.fromCode(m.group(1));
-            return new IllegalMovePacket(type);
-        } else {
-            throw new BadPacketException("Could not parse.");
-        }
     }
 }

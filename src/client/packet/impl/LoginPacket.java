@@ -13,57 +13,17 @@ import common.Payload;
 import exception.BadPacketException;
 import exception.InvalidCommandParametersException;
 
+/**
+ * Packet sent to log into server
+ *
+ * @author evan
+ *
+ */
 public class LoginPacket extends ClientPacket {
-    private final long packetId;
-    private final String username;
-    private final int port;
     public static final String PACKET_FORMAT = "login,%d,%s,%d";
     public static final Pattern PACKET_PATTERN = Pattern.compile("^login,(\\d+),(\\w+),(\\d+)$");
     public static final String COMMAND = "login";
     public static final Pattern COMMAND_PATTERN = Pattern.compile("^login\\s+(\\w+)$");
-
-    public LoginPacket(long packetId, String username, int port) {
-        this.packetId = packetId;
-        this.username = username;
-        this.port = port;
-    }
-
-    @Override
-    public String getPacketFormat() {
-        return PACKET_FORMAT;
-    }
-
-    @Override
-    public Pattern getPacketPattern() {
-        return PACKET_PATTERN;
-    }
-
-    @Override
-    public Object[] getParameters() {
-        return new Object[] { packetId, username, port };
-    }
-
-    @Override
-    public Pattern getCommandPattern() {
-        return COMMAND_PATTERN;
-    }
-
-    @Override
-    public String getCommand() {
-        return COMMAND;
-    }
-
-    public static LoginPacket fromPayload(Payload payload) {
-        Matcher m = PACKET_PATTERN.matcher(payload.content);
-        if (m.matches()) {
-            int packetId = Integer.parseInt(m.group(1));
-            String username = m.group(2);
-            int port = Integer.parseInt(m.group(3));
-            return new LoginPacket(packetId, username, port);
-        } else {
-            throw new BadPacketException("Could not parse.");
-        }
-    }
 
     public static LoginPacket fromCommand(Command command, Client handler) {
         Matcher m = COMMAND_PATTERN.matcher(command.content);
@@ -76,16 +36,66 @@ public class LoginPacket extends ClientPacket {
             throw new InvalidCommandParametersException("Could not parse.");
         }
     }
+    public static LoginPacket fromPayload(Payload payload) {
+        Matcher m = PACKET_PATTERN.matcher(payload.content);
+        if (m.matches()) {
+            int packetId = Integer.parseInt(m.group(1));
+            String username = m.group(2);
+            int port = Integer.parseInt(m.group(3));
+            return new LoginPacket(packetId, username, port);
+        } else {
+            throw new BadPacketException("Could not parse.");
+        }
+    }
+    private final long packetId;
 
+    private final String username;
+
+    private final int port;
+
+    public LoginPacket(long packetId, String username, int port) {
+        this.packetId = packetId;
+        this.username = username;
+        this.port = port;
+    }
+
+    @Override
+    public String getCommand() {
+        return COMMAND;
+    }
+
+    @Override
+    public Pattern getCommandPattern() {
+        return COMMAND_PATTERN;
+    }
+
+    @Override
+    public String getPacketFormat() {
+        return PACKET_FORMAT;
+    }
+
+    @Override
     public long getPacketId() {
         return packetId;
     }
 
-    public String getUsername() {
-        return username;
+    @Override
+    public Pattern getPacketPattern() {
+        return PACKET_PATTERN;
+    }
+
+    @Override
+    public Object[] getParameters() {
+        return new Object[] { packetId, username, port };
     }
 
     public int getPort() {
         return port;
     }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
 }

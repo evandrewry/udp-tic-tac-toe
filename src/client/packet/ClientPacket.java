@@ -20,41 +20,6 @@ import exception.BadPacketException;
 public abstract class ClientPacket extends Packet {
 
     /**
-     * @return the console command associated with this packet
-     */
-    public abstract String getCommand();
-
-    /**
-     * @return the pattern to match against console commands
-     */
-    public abstract Pattern getCommandPattern();
-
-    /**
-     * @return the unique id of this packet
-     */
-    public abstract long getPacketId();
-
-    /**
-     * @return user sending the packet
-     */
-    public abstract String getUsername();
-
-    /**
-     * @param inputCommand
-     * @return true if console input matches command pattern
-     */
-    public boolean isValidCommmand(String inputCommand) {
-        return getCommandPattern().matcher(inputCommand).matches();
-    }
-
-    /**
-     * @return the {@link ClientPacketType} associated with this packet
-     */
-    public ClientPacketType getPacketType() {
-        return ClientPacketType.fromClass(getClass());
-    }
-
-    /**
      * factory method to create packets from command
      * 
      * @param command
@@ -139,5 +104,40 @@ public abstract class ClientPacket extends Packet {
             e.printStackTrace();
         }
         throw new IllegalStateException();
+    }
+
+    /**
+     * @return the console command associated with this packet
+     */
+    public abstract String getCommand();
+
+    /**
+     * @return the pattern to match against console commands
+     */
+    public abstract Pattern getCommandPattern();
+
+    /**
+     * @return the unique id of this packet
+     */
+    public abstract long getPacketId();
+
+    /**
+     * @return the {@link ClientPacketType} associated with this packet
+     */
+    public ClientPacketType getPacketType() {
+        return ClientPacketType.fromClass(getClass());
+    }
+
+    /**
+     * @return user sending the packet
+     */
+    public abstract String getUsername();
+
+    /**
+     * @param inputCommand
+     * @return true if console input matches command pattern
+     */
+    public boolean isValidCommmand(String inputCommand) {
+        return getCommandPattern().matcher(inputCommand).matches();
     }
 }

@@ -17,9 +17,9 @@ import exception.InvalidClientCommandException;
 
 /**
  * Client UDP sender that takes input from console, converts it to a packet, and sends it to the server.
- * 
+ *
  * @author evan
- * 
+ *
  */
 public class UDPSender implements Runnable {
     private final DatagramSocket socket;
@@ -31,7 +31,7 @@ public class UDPSender implements Runnable {
 
     /**
      * Send from specified client and specified socket to specified ip and port
-     * 
+     *
      * @param socket
      * @param recieverIP
      * @param receiverPort
@@ -105,11 +105,11 @@ public class UDPSender implements Runnable {
                 try {
                     socket.setSoTimeout(ACK_TIMEOUT);
                     socket.receive(ackPacket);
-                    String ip = ackPacket.getAddress().getHostAddress();
                     /*
-                     * int port = ackPacket.getPort(); Payload payload = new Payload(new String(ackbuffer, 0,
-                     * ackPacket.getLength())); System.out.println("[" + Calendar.getInstance().getTimeInMillis() +
-                     * "] Receive from sender (IP: " + ip + ", Port: " + String.valueOf(port) + "): " + payload);
+                     * String ip = ackPacket.getAddress().getHostAddress(); int port = ackPacket.getPort(); Payload
+                     * payload = new Payload(new String(ackbuffer, 0, ackPacket.getLength())); System.out.println("[" +
+                     * Calendar.getInstance().getTimeInMillis() + "] Receive from sender (IP: " + ip + ", Port: " +
+                     * String.valueOf(port) + "): " + payload);
                      */
                     acked = true;
                 } catch (SocketTimeoutException e) {

@@ -3,11 +3,20 @@ package server.packet;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * types of ackplay packets
+ *
+ * @author evan
+ *
+ */
 public enum PlayRequestAcknowledgementStatus {
     ACCEPTED("A"),
     DENY("D"),
     FAILURE("F");
     private String code;
+    /**
+     * hash map to look up status by code
+     */
     private static final Map<String, PlayRequestAcknowledgementStatus> codeLookup = new HashMap<String, PlayRequestAcknowledgementStatus>();
     static {
         for (PlayRequestAcknowledgementStatus t : values()) {
@@ -15,20 +24,21 @@ public enum PlayRequestAcknowledgementStatus {
         }
     }
 
-    private PlayRequestAcknowledgementStatus(String code) {
-        this.code = code;
+    public static PlayRequestAcknowledgementStatus fromCode(String code) {
+        return codeLookup.get(code);
     }
 
-    public String toString() {
-        return code;
+    private PlayRequestAcknowledgementStatus(String code) {
+        this.code = code;
     }
 
     public String getCode() {
         return code;
     }
 
-    public static PlayRequestAcknowledgementStatus fromCode(String code) {
-        return codeLookup.get(code);
+    @Override
+    public String toString() {
+        return code;
     }
 
 }

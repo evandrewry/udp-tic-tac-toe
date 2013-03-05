@@ -19,6 +19,18 @@ import common.Payload;
 public class ServerPacketTest {
 
     @Test
+    public void testFromPayload_ack() {
+        ServerPacket p = ServerPacket.fromPayload(new Payload("ack,5"));
+        assertTrue(p.getClass().equals(AcknowledgementPacket.class));
+    }
+
+    @Test
+    public void testFromPayload_ackchoose() {
+        ServerPacket p = ServerPacket.fromPayload(new Payload("ackchoose,evan,D"));
+        assertTrue(p.getClass().equals(PlayRequestAcknowledgementPacket.class));
+    }
+
+    @Test
     public void testFromPayload_acklogin() {
         ServerPacket p = ServerPacket.fromPayload(new Payload("acklogin,F"));
         assertTrue(p.getClass().equals(LoginAcknowledgementPacket.class));
@@ -31,21 +43,9 @@ public class ServerPacketTest {
     }
 
     @Test
-    public void testFromPayload_request() {
-        ServerPacket p = ServerPacket.fromPayload(new Payload("request,evan"));
-        assertTrue(p.getClass().equals(PlayRequestPacket.class));
-    }
-
-    @Test
-    public void testFromPayload_ackchoose() {
-        ServerPacket p = ServerPacket.fromPayload(new Payload("ackchoose,evan,D"));
-        assertTrue(p.getClass().equals(PlayRequestAcknowledgementPacket.class));
-    }
-
-    @Test
-    public void testFromPayload_ack() {
-        ServerPacket p = ServerPacket.fromPayload(new Payload("ack,5"));
-        assertTrue(p.getClass().equals(AcknowledgementPacket.class));
+    public void testFromPayload_ackplay() {
+        ServerPacket p = ServerPacket.fromPayload(new Payload("ackplay,O"));
+        assertTrue(p.getClass().equals(IllegalMovePacket.class));
     }
 
     @Test
@@ -55,9 +55,9 @@ public class ServerPacketTest {
     }
 
     @Test
-    public void testFromPayload_ackplay() {
-        ServerPacket p = ServerPacket.fromPayload(new Payload("ackplay,O"));
-        assertTrue(p.getClass().equals(IllegalMovePacket.class));
+    public void testFromPayload_request() {
+        ServerPacket p = ServerPacket.fromPayload(new Payload("request,evan"));
+        assertTrue(p.getClass().equals(PlayRequestPacket.class));
     }
 
     @Test

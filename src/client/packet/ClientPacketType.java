@@ -33,89 +33,12 @@ public enum ClientPacketType {
     PLAY_GAME(PlayGamePacket.class),
     LOGOUT(LogoutPacket.class);
 
-    private Class<? extends ClientPacket> clazz;
-
-    private ClientPacketType(Class<? extends ClientPacket> clazz) {
-        this.clazz = clazz;
-    }
-
     /**
-     * map to look up type by packet class
+     * @param clazz
+     * @return packet type of input class
      */
-    private static final Map<Class<? extends ClientPacket>, ClientPacketType> classLookup = new HashMap<Class<? extends ClientPacket>, ClientPacketType>();
-    static {
-        for (ClientPacketType t : values()) {
-            classLookup.put(t.getPacketClass(), t);
-        }
-    }
-
-    /**
-     * map to look up type by command string
-     */
-    private static final Map<String, ClientPacketType> commandLookup = new HashMap<String, ClientPacketType>();
-    static {
-        for (ClientPacketType t : values()) {
-            try {
-                commandLookup.put(t.getCommand(), t);
-            } catch (NoSuchFieldException e) {
-                throw new IllegalStateException(e);
-            }
-        }
-    }
-
-    /**
-     * @return pattern for this packet type
-     * @throws NoSuchFieldException
-     */
-    private Pattern getPacketPattern() throws NoSuchFieldException {
-        try {
-            return (Pattern) clazz.getDeclaredField("PACKET_PATTERN").get(null);
-        } catch (Exception e) {
-            throw new NoSuchFieldException("Could not find packet pattern for " + clazz.getSimpleName());
-        }
-    }
-
-    /**
-     * @return class of this packet type
-     */
-    public Class<? extends ClientPacket> getPacketClass() {
-        return clazz;
-    }
-
-    /**
-     * @return command for this packet type
-     * @throws NoSuchFieldException
-     */
-    public String getCommand() throws NoSuchFieldException {
-        try {
-            return (String) clazz.getDeclaredField("COMMAND").get(null);
-        } catch (Exception e) {
-            throw new NoSuchFieldException("Could not find command " + clazz.getSimpleName());
-        }
-    }
-
-    /**
-     * @return command pattern for this packet type
-     * @throws NoSuchFieldException
-     */
-    public Pattern getCommandPattern() throws NoSuchFieldException {
-        try {
-            return (Pattern) clazz.getDeclaredField("COMMAND_PATTERN").get(null);
-        } catch (Exception e) {
-            throw new NoSuchFieldException("Could not find command pattern for " + clazz.getSimpleName());
-        }
-    }
-
-    /**
-     * @param inputCommand
-     * @return true if command is valid for this packet type
-     */
-    public boolean isValidCommand(String inputCommand) {
-        try {
-            return getCommandPattern().matcher(inputCommand).matches();
-        } catch (NoSuchFieldException e) {
-            throw new IllegalStateException();
-        }
+    public static ClientPacketType fromClass(Class<? extends ClientPacket> clazz) {
+        return classLookup.get(clazz);
     }
 
     /**
@@ -149,12 +72,89 @@ public enum ClientPacketType {
         }
         throw new BadPacketException(payload.content);
     }
+    private Class<? extends ClientPacket> clazz;
 
     /**
-     * @param clazz
-     * @return packet type of input class
+     * map to look up type by packet class
      */
-    public static ClientPacketType fromClass(Class<? extends ClientPacket> clazz) {
-        return classLookup.get(clazz);
+    private static final Map<Class<? extends ClientPacket>, ClientPacketType> classLookup = new HashMap<Class<? extends ClientPacket>, ClientPacketType>();
+    static {
+        for (ClientPacketType t : values()) {
+            classLookup.put(t.getPacketClass(), t);
+        }
+    }
+
+    /**
+     * map to look up type by command string
+     */
+    private static final Map<String, ClientPacketType> commandLookup = new HashMap<String, ClientPacketType>();
+
+    static {
+        for (ClientPacketType t : values()) {
+            try {
+                commandLookup.put(t.getCommand(), t);
+            } catch (NoSuchFieldException e) {
+                throw new IllegalStateException(e);
+            }
+        }
+    }
+
+    private ClientPacketType(Class<? extends ClientPacket> clazz) {
+        this.clazz = clazz;
+    }
+
+    /**
+     * @return command for this packet type
+     * @throws NoSuchFieldException
+     */
+    public String getCommand() throws NoSuchFieldException {
+        try {
+            return (String) clazz.getDeclaredField("COMMAND").get(null);
+        } catch (Exception e) {
+            throw new NoSuchFieldException("Could not find command " + clazz.getSimpleName());
+        }
+    }
+
+    /**
+     * @return command pattern for this packet type
+     * @throws NoSuchFieldException
+     */
+    public Pattern getCommandPattern() throws NoSuchFieldException {
+        try {
+            return (Pattern) clazz.getDeclaredField("COMMAND_PATTERN").get(null);
+        } catch (Exception e) {
+            throw new NoSuchFieldException("Could not find command pattern for " + clazz.getSimpleName());
+        }
+    }
+
+    /**
+     * @return class of this packet type
+     */
+    public Class<? extends ClientPacket> getPacketClass() {
+        return clazz;
+    }
+
+    /**
+     * @return pattern for this packet type
+     * @throws NoSuchFieldException
+     */
+    private Pattern getPacketPattern() throws NoSuchFieldException {
+        try {
+            return (Pattern) clazz.getDeclaredField("PACKET_PATTERN").get(null);
+        } catch (Exception e) {
+            throw new NoSuchFieldException("Could not find packet pattern for " + clazz.getSimpleName());
+        }
+    }
+
+    /**
+     * @param inputCommand
+     * @return true if command is valid for this packet type
+     */
+    public boolean isValidCommand(String inputCommand) {
+        try {
+            return getCommandPattern().matcher(inputCommand).matches();
+        } catch (NoSuchFieldException e) {
+            throw new IllegalStateException();
+        }
     }
 }

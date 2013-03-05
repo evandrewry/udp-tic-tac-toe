@@ -9,9 +9,25 @@ import common.Payload;
 
 import exception.BadPacketException;
 
+/**
+ * Basic ack packet
+ *
+ * @author evan
+ *
+ */
 public class AcknowledgementPacket extends ServerPacket {
+    public static AcknowledgementPacket fromPayload(Payload payload) {
+        Matcher m = PACKET_PATTERN.matcher(payload.content);
+        if (m.matches()) {
+            int packetId = Integer.parseInt(m.group(1));
+            return new AcknowledgementPacket(packetId);
+        } else {
+            throw new BadPacketException("Could not parse.");
+        }
+    }
     private final long packetId;
     public static final String PACKET_FORMAT = "ack,%d";
+
     public static final Pattern PACKET_PATTERN = Pattern.compile("^ack,(\\d+)$");
 
     public AcknowledgementPacket(long l) {
@@ -31,16 +47,6 @@ public class AcknowledgementPacket extends ServerPacket {
     @Override
     public Object[] getParameters() {
         return new Object[] { packetId };
-    }
-
-    public static AcknowledgementPacket fromPayload(Payload payload) {
-        Matcher m = PACKET_PATTERN.matcher(payload.content);
-        if (m.matches()) {
-            int packetId = Integer.parseInt(m.group(1));
-            return new AcknowledgementPacket(packetId);
-        } else {
-            throw new BadPacketException("Could not parse.");
-        }
     }
 
 }

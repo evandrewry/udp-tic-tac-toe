@@ -1,5 +1,13 @@
 package common;
 
+/**
+ * Generic pair class
+ *
+ * @author evan
+ *
+ * @param <LEFT>
+ * @param <RIGHT>
+ */
 public class Pair<LEFT, RIGHT> {
     private LEFT left;
     private RIGHT right;
@@ -13,12 +21,12 @@ public class Pair<LEFT, RIGHT> {
         return this.left;
     }
 
-    public void setLeft(LEFT left) {
-        this.left = left;
-    }
-
     public RIGHT getRight() {
         return this.right;
+    }
+
+    public void setLeft(LEFT left) {
+        this.left = left;
     }
 
     public void setRight(RIGHT right) {

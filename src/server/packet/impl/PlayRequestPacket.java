@@ -9,10 +9,26 @@ import common.Payload;
 
 import exception.BadPacketException;
 
+/**
+ * Packet sent to tell user that someone has requested to play with them
+ *
+ * @author evan
+ *
+ */
 public class PlayRequestPacket extends ServerPacket {
 
+    public static PlayRequestPacket fromPayload(Payload payload) {
+        Matcher m = PACKET_PATTERN.matcher(payload.content);
+        if (m.matches()) {
+            String username = m.group(1);
+            return new PlayRequestPacket(username);
+        } else {
+            throw new BadPacketException("Could not parse.");
+        }
+    }
     private String username;
     public static final String PACKET_FORMAT = "request,%s";
+
     public static final Pattern PACKET_PATTERN = Pattern.compile("^request,(\\w+)$");
 
     public PlayRequestPacket(String username) {
@@ -32,16 +48,6 @@ public class PlayRequestPacket extends ServerPacket {
     @Override
     public Object[] getParameters() {
         return new Object[] { username };
-    }
-
-    public static PlayRequestPacket fromPayload(Payload payload) {
-        Matcher m = PACKET_PATTERN.matcher(payload.content);
-        if (m.matches()) {
-            String username = m.group(1);
-            return new PlayRequestPacket(username);
-        } else {
-            throw new BadPacketException("Could not parse.");
-        }
     }
 
     public String toFormattedString() {

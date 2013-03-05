@@ -23,20 +23,34 @@ import exception.BadPacketException;
 
 /**
  * Tic Tac Toe client
- * 
+ *
  * @author evan
- * 
+ *
  */
 public class Client {
+    /**
+     * Creates a client and runs it.
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
+        try {
+            (new Client("localhost", 4312)).run();
+        } catch (SocketException e) {
+            System.out.println("Could not connect to socket.");
+        }
+    }
+
     private final DatagramSocket socket;
     private final ExecutorService pool;
     private User currentUser;
     private final String receiverIP;
+
     private final int receiverPort;
 
     /**
      * Creates client that sends packets to specified ip and port
-     * 
+     *
      * @param serverIp
      * @param serverPort
      * @throws SocketException
@@ -49,8 +63,29 @@ public class Client {
     }
 
     /**
+     * @return user that client is currently logged in as
+     */
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    /**
+     * @return local ip address of the client
+     */
+    public String getIP() {
+        return socket.getLocalAddress().getHostAddress();
+    }
+
+    /**
+     * @return local port of client
+     */
+    public int getPort() {
+        return socket.getLocalPort();
+    }
+
+    /**
      * respond to server packet by figuring out that type of packet it is and calling the appropriate response method.
-     * 
+     *
      * @param packet
      */
     private void handle(ServerPacket packet) {
@@ -83,8 +118,17 @@ public class Client {
     }
 
     /**
+     * respond to current game state packet by printing out the tic tac toe board
+     *
+     * @param packet
+     */
+    private void handleCurrentGameState(CurrentGameStatePacket packet) {
+        System.out.println(packet.toFormattedString());
+    }
+
+    /**
      * respond to game result packet by printing out a message to the console
-     * 
+     *
      * @param packet
      */
     private void handleGameResult(GameResultPacket packet) {
@@ -106,45 +150,8 @@ public class Client {
     }
 
     /**
-     * respond to current game state packet by printing out the tic tac toe board
-     * 
-     * @param packet
-     */
-    private void handleCurrentGameState(CurrentGameStatePacket packet) {
-        System.out.println(packet.toFormattedString());
-    }
-
-    /**
-     * respond to a play request packet by printing out info to client
-     * 
-     * @param packet
-     */
-    private void handlePlayRequest(PlayRequestPacket packet) {
-        System.out.println(packet.toFormattedString());
-    }
-
-    /**
-     * respond to a play request ack packet by printing out info to client
-     * 
-     * @param packet
-     */
-    private void handlePlayRequestAck(PlayRequestAcknowledgementPacket packet) {
-        System.out.println(packet.toFormattedString());
-    }
-
-    /**
-     * respond to a current users list packet by printing the list to the console
-     * 
-     * @param packet
-     * @return
-     */
-    private void handleUserList(CurrentUsersListPacket packet) {
-        System.out.println(packet.getUsers().toFormattedString());
-    }
-
-    /**
      * respond to a login acknowledgement packet
-     * 
+     *
      * @param packet
      * @return
      */
@@ -157,8 +164,64 @@ public class Client {
     }
 
     /**
+     * log out user and print message
+     */
+    public void handleLogout() {
+        System.out.println(currentUser.getUsername() + " logout");
+        currentUser = null;
+    }
+
+    /**
+     * respond to a play request packet by printing out info to client
+     *
+     * @param packet
+     */
+    private void handlePlayRequest(PlayRequestPacket packet) {
+        System.out.println(packet.toFormattedString());
+    }
+
+    /**
+     * respond to a play request ack packet by printing out info to client
+     *
+     * @param packet
+     */
+    private void handlePlayRequestAck(PlayRequestAcknowledgementPacket packet) {
+        System.out.println(packet.toFormattedString());
+    }
+
+    /**
+     * respond to a current users list packet by printing the list to the console
+     *
+     * @param packet
+     * @return
+     */
+    private void handleUserList(CurrentUsersListPacket packet) {
+        System.out.println(packet.getUsers().toFormattedString());
+    }
+
+    /**
+     * sets the current user variable
+     *
+     * @param username
+     * @param ip
+     * @param port
+     */
+    public void login(String username, String ip, int port) {
+        currentUser = new User(username, ip, port);
+    }
+
+    /**
+     * runs a client UDPReceiver that receives packets from the server
+     *
+     * @throws SocketException
+     */
+    public void recieve() throws SocketException {
+        pool.execute(new UDPReciever(socket, this));
+    }
+
+    /**
      * respond to a datagram packet
-     * 
+     *
      * @param p
      * @throws UnknownHostException
      */
@@ -170,7 +233,7 @@ public class Client {
 
     /**
      * puts UDPSender and receiver in thread pool and runs them
-     * 
+     *
      * @throws SocketException
      */
     private void run() throws SocketException {
@@ -179,73 +242,11 @@ public class Client {
     }
 
     /**
-     * runs a client UDPReceiver that receives packets from the server
-     * 
-     * @throws SocketException
-     */
-    public void recieve() throws SocketException {
-        pool.execute(new UDPReciever(socket, this));
-    }
-
-    /**
      * runs a client UDPSender that takes console input and sends it, waiting for acks
-     * 
+     *
      * @throws SocketException
      */
     public void send() throws SocketException {
         pool.execute(new UDPSender(new DatagramSocket(), receiverIP, receiverPort, this));
-    }
-
-    /**
-     * sets the current user variable
-     * 
-     * @param username
-     * @param ip
-     * @param port
-     */
-    public void login(String username, String ip, int port) {
-        currentUser = new User(username, ip, port);
-    }
-
-    /**
-     * @return user that client is currently logged in as
-     */
-    public User getCurrentUser() {
-        return currentUser;
-    }
-
-    /**
-     * @return local port of client
-     */
-    public int getPort() {
-        return socket.getLocalPort();
-    }
-
-    /**
-     * @return local ip address of the client
-     */
-    public String getIP() {
-        return socket.getLocalAddress().getHostAddress();
-    }
-
-    /**
-     * Creates a client and runs it.
-     * 
-     * @param args
-     */
-    public static void main(String[] args) {
-        try {
-            (new Client("localhost", 4312)).run();
-        } catch (SocketException e) {
-            System.out.println("Could not connect to socket.");
-        }
-    }
-
-    /**
-     * log out user and print message
-     */
-    public void handleLogout() {
-        System.out.println(currentUser.getUsername() + " logout");
-        currentUser = null;
     }
 }

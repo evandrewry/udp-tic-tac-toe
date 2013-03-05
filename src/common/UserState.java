@@ -3,6 +3,12 @@ package common;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Possible states a user can be in
+ *
+ * @author evan
+ *
+ */
 public enum UserState {
     FREE("F"),
     BUSY("B"),
@@ -18,19 +24,20 @@ public enum UserState {
         }
     }
 
-    UserState(String code) {
-        this.code = code;
+    public static UserState fromCode(String code) {
+        return codeLookup.get(code);
     }
 
-    public String toString() {
-        return this.code;
+    UserState(String code) {
+        this.code = code;
     }
 
     public String getCode() {
         return this.code;
     }
 
-    public static UserState fromCode(String code) {
-        return codeLookup.get(code);
+    @Override
+    public String toString() {
+        return this.code;
     }
 }

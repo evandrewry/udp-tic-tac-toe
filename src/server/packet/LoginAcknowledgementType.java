@@ -3,11 +3,20 @@ package server.packet;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Types of acklogin packets
+ *
+ * @author evan
+ *
+ */
 public enum LoginAcknowledgementType {
     FAILURE("F"),
     SUCCESS("S");
 
     private String code;
+    /**
+     * hash map to look up type by code
+     */
     private static final Map<String, LoginAcknowledgementType> codeLookup = new HashMap<String, LoginAcknowledgementType>();
     static {
         for (LoginAcknowledgementType t : values()) {
@@ -15,19 +24,20 @@ public enum LoginAcknowledgementType {
         }
     }
 
-    LoginAcknowledgementType(String display) {
-        this.code = display;
+    public static LoginAcknowledgementType fromCode(String code) {
+        return codeLookup.get(code);
     }
 
-    public String toString() {
-        return code;
+    LoginAcknowledgementType(String display) {
+        this.code = display;
     }
 
     public String getCode() {
         return code;
     }
 
-    public static LoginAcknowledgementType fromCode(String code) {
-        return codeLookup.get(code);
+    @Override
+    public String toString() {
+        return code;
     }
 }

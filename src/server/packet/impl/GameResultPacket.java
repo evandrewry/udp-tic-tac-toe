@@ -10,9 +10,25 @@ import server.packet.ServerPacket;
 
 import common.Payload;
 
+/**
+ * Packet indicating result of game
+ *
+ * @author evan
+ *
+ */
 public class GameResultPacket extends ServerPacket {
+    public static GameResultPacket fromPayload(Payload payload) {
+        Matcher m = PACKET_PATTERN.matcher(payload.content);
+        if (m.matches()) {
+            GameResultType result = GameResultType.fromCode(m.group(1));
+            return new GameResultPacket(result);
+        } else {
+            throw new BadPacketException("Could not parse.");
+        }
+    }
     private final GameResultType result;
     public static final String PACKET_FORMAT = "result,%s";
+
     public static final Pattern PACKET_PATTERN = Pattern.compile("^result,(\\w+)$");
 
     public GameResultPacket(GameResultType result) {
@@ -32,16 +48,6 @@ public class GameResultPacket extends ServerPacket {
     @Override
     public Object[] getParameters() {
         return new Object[] { result.getCode() };
-    }
-
-    public static GameResultPacket fromPayload(Payload payload) {
-        Matcher m = PACKET_PATTERN.matcher(payload.content);
-        if (m.matches()) {
-            GameResultType result = GameResultType.fromCode(m.group(1));
-            return new GameResultPacket(result);
-        } else {
-            throw new BadPacketException("Could not parse.");
-        }
     }
 
     public GameResultType getResult() {

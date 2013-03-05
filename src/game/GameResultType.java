@@ -3,6 +3,12 @@ package game;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Possible results of a turn in a tic tac toe game
+ *
+ * @author evan
+ *
+ */
 public enum GameResultType {
     WIN("W"),
     LOSS("L"),
@@ -17,19 +23,20 @@ public enum GameResultType {
         }
     }
 
-    private GameResultType(String code) {
-        this.code = code;
+    public static GameResultType fromCode(String code) {
+        return codeLookup.get(code);
     }
 
-    public String toString() {
-        return code;
+    private GameResultType(String code) {
+        this.code = code;
     }
 
     public String getCode() {
         return code;
     }
 
-    public static GameResultType fromCode(String code) {
-        return codeLookup.get(code);
+    @Override
+    public String toString() {
+        return code;
     }
 }
