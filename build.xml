@@ -4,6 +4,7 @@
     </target>
     <target name="server">
         <echo message="Compiling Server.jar ..." level="info" />
+    	<mkdir dir="./bin" />
         <jar destfile="./Server.jar" filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Main-Class" value="server.Server"/>
@@ -14,6 +15,7 @@
     </target>
     <target name="client">
         <echo message="Compiling Client.jar ..." level="info" />
+    	<mkdir dir="./bin" />
         <jar destfile="./Client.jar" filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Main-Class" value="client.Client"/>
