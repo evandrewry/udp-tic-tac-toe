@@ -26,7 +26,7 @@ public class ClientPacketTest {
 
 	@Before
 	public void setUp() throws IOException {
-	    client = new Client();
+	    client = new Client("localhost", 4119);
 		client.login("evan", "localhost", 4119);
 	}
 

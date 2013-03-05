@@ -19,6 +19,10 @@ public class LoginAcknowledgementPacket extends ServerPacket {
 	public LoginAcknowledgementPacket(LoginAcknowledgementType acktype) {
 		this.acktype = acktype;
 	}
+	
+	public LoginAcknowledgementType getAcktype() {
+		return this.acktype;
+	}
 
 	@Override
 	public String getPacketFormat() {

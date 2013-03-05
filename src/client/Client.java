@@ -1,14 +1,24 @@
 package client;
 
 import java.io.IOException;
+import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import server.packet.LoginAcknowledgementType;
 import server.packet.ServerPacket;
+import server.packet.impl.CurrentGameStatePacket;
+import server.packet.impl.CurrentUsersListPacket;
+import server.packet.impl.GameResultPacket;
+import server.packet.impl.LoginAcknowledgementPacket;
+import server.packet.impl.PlayRequestAcknowledgementPacket;
+import server.packet.impl.PlayRequestPacket;
 import client.packet.ClientPacket;
 
+import common.Payload;
 import common.User;
 
 import exception.BadPacketException;
@@ -18,35 +28,83 @@ public class Client {
 	private final ExecutorService pool;
 	private User currentUser;
 	private static final String PROMPT = ">>> ";
-	private static final String receiverIP = "localhost";
-	private static final int receiverPort = 4119;
+	private final String receiverIP;
+	private final int receiverPort;
 
-	public Client() throws IOException {
+	public Client(String serverIp, int serverPort) throws IOException {
+		this.receiverIP = serverIp;
+		this.receiverPort = serverPort;
 		socket = new DatagramSocket();
 		pool = Executors.newFixedThreadPool(2);
 	}
 
-	ClientPacket respond(ServerPacket packet) {
+	private ClientPacket handle(ServerPacket packet) {
 		switch (packet.getPacketType()) {
 		case ACK:
 			return null;
 		case CURRENT_GAME_STATE:
-			return null;
+			return handleCurrentGameState((CurrentGameStatePacket) packet);
 		case CURRENT_USERS_LIST:
-			return null;
+			return handleUserList((CurrentUsersListPacket) packet);
 		case GAME_RESULT:
-			return null;
+			return handleGameResult((GameResultPacket) packet);
 		case ILLEGAL_MOVE:
 			return null;
 		case LOGIN_ACK:
-			return null;
+			return handleLoginAck((LoginAcknowledgementPacket) packet);
 		case PLAY_REQUEST_ACK:
-			return null;
+			return handlePlayRequestAck((PlayRequestAcknowledgementPacket) packet);
 		case PLAY_REQUEST:
-			return null;
+			return handlePlayRequest((PlayRequestPacket) packet);
 		default:
 			throw new BadPacketException("Unrecognized packet format");
 		}
+	}
+	
+	private ClientPacket handleGameResult(GameResultPacket packet) {
+		String message = currentUser.getUsername();
+		switch (packet.getResult()) {
+		case DRAW: message += " draw"; break;
+		case LOSS: message += " lose"; break;
+		case WIN: message += " win"; break;
+		}
+		System.out.println(message);
+		return null;
+	}
+
+	private ClientPacket handleCurrentGameState(CurrentGameStatePacket packet) {
+		System.out.println(packet.toFormattedString());
+		return null;
+	}
+
+	private ClientPacket handlePlayRequest(PlayRequestPacket packet) {
+		System.out.println(packet.toFormattedString());
+		return null;
+	}
+
+	private ClientPacket handlePlayRequestAck(
+			PlayRequestAcknowledgementPacket packet) {
+		System.out.println(packet.toFormattedString());
+		return null;
+	}
+
+	private ClientPacket handleUserList(CurrentUsersListPacket packet) {
+		System.out.println(packet.getUsers().toFormattedString());
+		return null;
+	}
+
+	private ClientPacket handleLoginAck(LoginAcknowledgementPacket packet) {
+		String message = "login ";
+		message += packet.getAcktype() == LoginAcknowledgementType.SUCCESS ? "success " : "failure ";
+		message += currentUser.getUsername();
+		System.out.println(message);
+		return null;
+	}
+
+	public void respond(DatagramPacket p) throws UnknownHostException {
+		Payload payload = new Payload(new String(p.getData(), 0, p.getLength()));
+		ServerPacket sp = ServerPacket.fromPayload(payload);
+		handle(sp);
 	}
 
 	private void run() throws SocketException {
@@ -58,10 +116,7 @@ public class Client {
 		return null;
 	}
 
-	public static void main(String[] args) throws IOException {
-		Client c = new Client();
-		c.run();
-	}
+
 
 	public void recieve() throws SocketException {
 		pool.execute(new UDPReciever(socket, this));
@@ -86,5 +141,10 @@ public class Client {
     public String getIP() {
     	return socket.getLocalAddress().getHostAddress();
     }
-
+    
+    
+	public static void main(String[] args) throws IOException {
+		Client c = new Client("localhost", 4119);
+		c.run();
+	}
 }

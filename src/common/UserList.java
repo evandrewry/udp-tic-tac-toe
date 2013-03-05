@@ -48,4 +48,16 @@ public class UserList extends TreeMap<String, User> {
 		}
 		return s.toString();
 	}
+	
+	public String toFormattedString() {
+		StringBuilder s = new StringBuilder();
+		boolean fst = true;
+		for (User u : values()) {
+			if (!fst || (fst = false))
+				s.append("\n");
+			s.append(u.getUsername()).append(" ")
+					.append(u.getState().toString());
+		}
+		return s.toString();
+	}
 }

@@ -1,14 +1,14 @@
 package server.packet.impl;
 
+import exception.BadPacketException;
+import game.Game;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import server.packet.ServerPacket;
 
 import common.Payload;
-
-import exception.BadPacketException;
-import game.Game;
 
 public class CurrentGameStatePacket extends ServerPacket {
 	private String state;
@@ -47,6 +47,15 @@ public class CurrentGameStatePacket extends ServerPacket {
 		} else {
 			throw new BadPacketException("Could not parse.");
 		}
+	}
+
+	public String toFormattedString() {
+		String s = state.replace('0', '-');
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 3; i++) {
+			sb.append(s.substring(i * 3, i * 3 + 3)).append('\n');
+		}
+		return sb.toString();
 	}
 
 }

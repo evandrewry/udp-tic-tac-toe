@@ -44,4 +44,8 @@ public class PlayRequestPacket extends ServerPacket {
 			throw new BadPacketException("Could not parse.");
 		}
 	}
+
+	public String toFormattedString() {
+		return "request from " + username;
+	}
 }

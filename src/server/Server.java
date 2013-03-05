@@ -35,7 +35,6 @@ import client.packet.impl.DenyRequestPacket;
 import client.packet.impl.LoginPacket;
 import client.packet.impl.PlayGamePacket;
 
-import common.Packet;
 import common.Payload;
 import common.User;
 import common.UserList;
@@ -161,7 +160,7 @@ public class Server {
 			e.printStackTrace();
 		}
 
-		Game g = new Game(sender, receiver);
+		Game g = new Game(receiver, sender);
 		currentGames.add(g);
 
 		try {
@@ -183,9 +182,8 @@ public class Server {
 
 		// sender is free, check state of receiver
 		User receiver = currentUsers.get(packet.getReciever());
-		if (receiver == null || receiver.getState() != UserState.FREE) {
-			return new PlayRequestAcknowledgementPacket(receiver == null ? ""
-					: receiver.getUsername(),
+		if (receiver == null || receiver.getState() != UserState.FREE || receiver == sender) {
+			return new PlayRequestAcknowledgementPacket(packet.getReciever(),
 					PlayRequestAcknowledgementStatus.FAILURE);
 		}
 
@@ -243,11 +241,11 @@ public class Server {
 		pool.execute(new UDPReciever(socket, this));
 	}
 
-	public static void main(String[] args) throws SocketException, IOException {
-		(new Server()).recieve();
-	}
+
 
 	public void sendPacket(ServerPacket p, InetAddress addr, int port) {
+		if (p == null ) return;
+		
 		byte[] payload = p.toPayload().getBytes();
 		DatagramPacket sendPacket;
 		sendPacket = new DatagramPacket(payload, payload.length, addr, port);
@@ -281,8 +279,11 @@ public class Server {
 	}
 
 	private void ack(ClientPacket cp, DatagramPacket p) {
-		AcknowledgementPacket ack = new AcknowledgementPacket(Packet.nextId());
+		AcknowledgementPacket ack = new AcknowledgementPacket(cp.getPacketId());
 		sendPacket(ack, p.getAddress(), p.getPort());
 	}
-
+	
+	public static void main(String[] args) throws SocketException, IOException {
+		(new Server()).recieve();
+	}
 }

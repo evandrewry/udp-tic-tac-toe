@@ -44,4 +44,8 @@ public class GameResultPacket extends ServerPacket {
 			throw new BadPacketException("Could not parse.");
 		}
 	}
+
+	public GameResultType getResult() {
+		return this.result;
+	}
 }

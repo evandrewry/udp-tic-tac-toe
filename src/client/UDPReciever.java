@@ -43,7 +43,7 @@ public class UDPReciever implements Runnable {
 							+ String.valueOf(port) + "): "
 							+ cmd);
 					ServerPacket p = ServerPacket.fromPayload(cmd);
-					handler.respond(p);
+					handler.respond(packet);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

@@ -1,9 +1,19 @@
 package server.packet;
 
+import game.GameResultType;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public enum PlayRequestAcknowledgementStatus {
 	ACCEPTED("A"), DENY("D"), FAILURE("F");
 	private String code;
-
+	private static final Map<String, PlayRequestAcknowledgementStatus> codeLookup = new HashMap<String, PlayRequestAcknowledgementStatus>();
+	static {
+		for (PlayRequestAcknowledgementStatus t : values()) {
+			codeLookup.put(t.getCode(), t);
+		}
+	}
 	private PlayRequestAcknowledgementStatus(String code) {
 		this.code = code;
 	}
@@ -16,9 +26,8 @@ public enum PlayRequestAcknowledgementStatus {
 		return code;
 	}
 
-	public static PlayRequestAcknowledgementStatus fromCode(String group) {
-		// TODO Auto-generated method stub
-		return null;
+	public static PlayRequestAcknowledgementStatus fromCode(String code) {
+		return codeLookup.get(code);
 	}
 
 }

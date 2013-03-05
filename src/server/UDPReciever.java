@@ -5,8 +5,6 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.Calendar;
 
-import client.packet.ClientPacket;
-
 import common.Payload;
 
 public class UDPReciever implements Runnable {

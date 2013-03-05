@@ -20,6 +20,10 @@ public class CurrentUsersListPacket extends ServerPacket {
 		this.users = currentUsers;
 	}
 
+	public UserList getUsers() {
+		return this.users;
+	}
+	
 	@Override
 	public String getPacketFormat() {
 		return PACKET_FORMAT;

@@ -8,8 +8,10 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Calendar;
+import java.util.regex.Pattern;
 
 import client.packet.ClientPacket;
+import client.packet.impl.LoginPacket;
 
 public class UDPSender implements Runnable {
 	private final DatagramSocket socket;
@@ -32,8 +34,8 @@ public class UDPSender implements Runnable {
 
 		byte[] buffer;
 		while (true) {
-			System.out.print(PROMPT);
-
+			
+			//read input from console
 			String inputString;
 			try {
 				inputString = input.readLine();
@@ -42,7 +44,14 @@ public class UDPSender implements Runnable {
 				e.printStackTrace();
 				continue;
 			}
-
+			
+			//make sure user is logged in
+			if (handler.getCurrentUser() == null && !Pattern.matches(LoginPacket.COMMAND_PATTERN.toString(), inputString)){
+				System.out.println("not logged in");
+				continue;
+			}
+			
+			//send the packet
 			buffer = ClientPacket.fromCommand(new Command(inputString), handler).toPayload().getBytes();
 			DatagramPacket sendPacket;
 			try {
