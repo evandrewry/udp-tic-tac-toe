@@ -31,10 +31,6 @@
             <src path="src"/>
             <classpath refid="udp-tic-tac-toe.classpath"/>
         </javac>
-        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
-            <src path="test"/>
-            <classpath refid="udp-tic-tac-toe.classpath"/>
-        </javac>
     </target>
     <target name="Client">
         <java classname="client.Client" failonerror="true" fork="yes">
