@@ -11,42 +11,40 @@ import common.Payload;
 import exception.BadPacketException;
 
 public class LoginAcknowledgementPacket extends ServerPacket {
-	private LoginAcknowledgementType acktype;
-	public static final String PACKET_FORMAT = "acklogin,%s";
-	public static final Pattern PACKET_PATTERN = Pattern
-			.compile("^acklogin,(\\w+)$");
+    private LoginAcknowledgementType acktype;
+    public static final String PACKET_FORMAT = "acklogin,%s";
+    public static final Pattern PACKET_PATTERN = Pattern.compile("^acklogin,(\\w+)$");
 
-	public LoginAcknowledgementPacket(LoginAcknowledgementType acktype) {
-		this.acktype = acktype;
-	}
-	
-	public LoginAcknowledgementType getAcktype() {
-		return this.acktype;
-	}
+    public LoginAcknowledgementPacket(LoginAcknowledgementType acktype) {
+        this.acktype = acktype;
+    }
 
-	@Override
-	public String getPacketFormat() {
-		return PACKET_FORMAT;
-	}
+    public LoginAcknowledgementType getAcktype() {
+        return this.acktype;
+    }
 
-	@Override
-	public Pattern getPacketPattern() {
-		return PACKET_PATTERN;
-	}
+    @Override
+    public String getPacketFormat() {
+        return PACKET_FORMAT;
+    }
 
-	@Override
-	public Object[] getParameters() {
-		return new Object[] { acktype.toString() };
-	}
+    @Override
+    public Pattern getPacketPattern() {
+        return PACKET_PATTERN;
+    }
 
-	public static LoginAcknowledgementPacket fromPayload(Payload payload) {
-		Matcher m = PACKET_PATTERN.matcher(payload.content);
-		if (m.matches()) {
-			LoginAcknowledgementType acktype = LoginAcknowledgementType
-					.fromCode(m.group(1));
-			return new LoginAcknowledgementPacket(acktype);
-		} else {
-			throw new BadPacketException("Could not parse.");
-		}
-	}
+    @Override
+    public Object[] getParameters() {
+        return new Object[] { acktype.toString() };
+    }
+
+    public static LoginAcknowledgementPacket fromPayload(Payload payload) {
+        Matcher m = PACKET_PATTERN.matcher(payload.content);
+        if (m.matches()) {
+            LoginAcknowledgementType acktype = LoginAcknowledgementType.fromCode(m.group(1));
+            return new LoginAcknowledgementPacket(acktype);
+        } else {
+            throw new BadPacketException("Could not parse.");
+        }
+    }
 }

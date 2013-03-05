@@ -11,41 +11,40 @@ import exception.BadPacketException;
 
 public class PlayRequestPacket extends ServerPacket {
 
-	private String username;
-	public static final String PACKET_FORMAT = "request,%s";
-	public static final Pattern PACKET_PATTERN = Pattern
-			.compile("^request,(\\w+)$");
+    private String username;
+    public static final String PACKET_FORMAT = "request,%s";
+    public static final Pattern PACKET_PATTERN = Pattern.compile("^request,(\\w+)$");
 
-	public PlayRequestPacket(String username) {
-		this.username = username;
-	}
+    public PlayRequestPacket(String username) {
+        this.username = username;
+    }
 
-	@Override
-	public String getPacketFormat() {
-		return PACKET_FORMAT;
-	}
+    @Override
+    public String getPacketFormat() {
+        return PACKET_FORMAT;
+    }
 
-	@Override
-	public Pattern getPacketPattern() {
-		return PACKET_PATTERN;
-	}
+    @Override
+    public Pattern getPacketPattern() {
+        return PACKET_PATTERN;
+    }
 
-	@Override
-	public Object[] getParameters() {
-		return new Object[] { username };
-	}
+    @Override
+    public Object[] getParameters() {
+        return new Object[] { username };
+    }
 
-	public static PlayRequestPacket fromPayload(Payload payload) {
-		Matcher m = PACKET_PATTERN.matcher(payload.content);
-		if (m.matches()) {
-			String username = m.group(1);
-			return new PlayRequestPacket(username);
-		} else {
-			throw new BadPacketException("Could not parse.");
-		}
-	}
+    public static PlayRequestPacket fromPayload(Payload payload) {
+        Matcher m = PACKET_PATTERN.matcher(payload.content);
+        if (m.matches()) {
+            String username = m.group(1);
+            return new PlayRequestPacket(username);
+        } else {
+            throw new BadPacketException("Could not parse.");
+        }
+    }
 
-	public String toFormattedString() {
-		return "request from " + username;
-	}
+    public String toFormattedString() {
+        return "request from " + username;
+    }
 }

@@ -11,61 +11,59 @@ import common.Payload;
 import exception.BadPacketException;
 
 public class PlayRequestAcknowledgementPacket extends ServerPacket {
-	private final String username;
-	private final PlayRequestAcknowledgementStatus status;
-	public static final String PACKET_FORMAT = "ackchoose,%s,%s";
-	public static final Pattern PACKET_PATTERN = Pattern
-			.compile("^ackchoose,(\\w+),(\\w+)$");
+    private final String username;
+    private final PlayRequestAcknowledgementStatus status;
+    public static final String PACKET_FORMAT = "ackchoose,%s,%s";
+    public static final Pattern PACKET_PATTERN = Pattern.compile("^ackchoose,(\\w+),(\\w+)$");
 
-	public PlayRequestAcknowledgementPacket(String username,
-			PlayRequestAcknowledgementStatus status) {
-		this.username = username;
-		this.status = status;
-	}
+    public PlayRequestAcknowledgementPacket(String username, PlayRequestAcknowledgementStatus status) {
+        this.username = username;
+        this.status = status;
+    }
 
-	public PlayRequestAcknowledgementStatus getStatus() {
-		return this.status;
-	}
-	public String getUsername() {
-		return this.username;
-	}
-	
-	@Override
-	public String getPacketFormat() {
-		return PACKET_FORMAT;
-	}
+    public PlayRequestAcknowledgementStatus getStatus() {
+        return this.status;
+    }
 
-	@Override
-	public Pattern getPacketPattern() {
-		return PACKET_PATTERN;
-	}
+    public String getUsername() {
+        return this.username;
+    }
 
-	@Override
-	public Object[] getParameters() {
-		return new Object[] { username, status.getCode() };
-	}
+    @Override
+    public String getPacketFormat() {
+        return PACKET_FORMAT;
+    }
 
-	public static PlayRequestAcknowledgementPacket fromPayload(Payload payload) {
-		Matcher m = PACKET_PATTERN.matcher(payload.content);
-		if (m.matches()) {
-			String username = m.group(1);
-			PlayRequestAcknowledgementStatus status = PlayRequestAcknowledgementStatus
-					.fromCode(m.group(2));
-			return new PlayRequestAcknowledgementPacket(username, status);
-		} else {
-			throw new BadPacketException("Could not parse.");
-		}
-	}
+    @Override
+    public Pattern getPacketPattern() {
+        return PACKET_PATTERN;
+    }
 
-	public String toFormattedString() {
-		switch (status) {
-		case ACCEPTED:
-			return "request accepted from " + this.username;
-		case DENY:
-			return "request denied by " + this.username;
-		default:
-			return "request to " + this.username + " failed";
-		}
-	}
+    @Override
+    public Object[] getParameters() {
+        return new Object[] { username, status.getCode() };
+    }
+
+    public static PlayRequestAcknowledgementPacket fromPayload(Payload payload) {
+        Matcher m = PACKET_PATTERN.matcher(payload.content);
+        if (m.matches()) {
+            String username = m.group(1);
+            PlayRequestAcknowledgementStatus status = PlayRequestAcknowledgementStatus.fromCode(m.group(2));
+            return new PlayRequestAcknowledgementPacket(username, status);
+        } else {
+            throw new BadPacketException("Could not parse.");
+        }
+    }
+
+    public String toFormattedString() {
+        switch (status) {
+            case ACCEPTED:
+                return "request accepted from " + this.username;
+            case DENY:
+                return "request denied by " + this.username;
+            default:
+                return "request to " + this.username + " failed";
+        }
+    }
 
 }

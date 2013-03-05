@@ -42,276 +42,260 @@ import common.UserList;
 import common.UserState;
 
 public class Server {
-	private final DatagramSocket socket;
-	private final ExecutorService pool;
-	private UserList currentUsers = new UserList();
-	private ArrayList<Game> currentGames = new ArrayList<Game>();
+    private final DatagramSocket socket;
+    private final ExecutorService pool;
+    private UserList currentUsers = new UserList();
+    private ArrayList<Game> currentGames = new ArrayList<Game>();
 
-	private Server() throws IOException {
-		socket = new DatagramSocket(4119);
-		pool = Executors.newFixedThreadPool(2);
-	}
+    private Server() throws IOException {
+        socket = new DatagramSocket(4119);
+        pool = Executors.newFixedThreadPool(2);
+    }
 
-	private ServerPacket getResponse(ClientPacket packet, DatagramPacket pkt) {
-		switch (packet.getPacketType()) {
-		case LOGIN:
-			return handleLogin((LoginPacket) packet, pkt.getAddress()
-					.getHostAddress());
-		case QUERY_LIST:
-			return new CurrentUsersListPacket(currentUsers);
-		case CHOOSE_PLAYER:
-			return handlePlayRequest((ChoosePlayerPacket) packet);
-		case ACCEPT_REQUEST:
-			return handleAcceptRequest((AcceptRequestPacket) packet);
-		case DENY_REQUEST:
-			return handleDenyRequest((DenyRequestPacket) packet);
-		case PLAY_GAME:
-			return handlePlay((PlayGamePacket) packet);
-		case LOGOUT:
-			return handleLogout((LogoutPacket) packet);
-		default:
-			throw new BadPacketException("Unrecognized packet format");
-		}
-	}
+    private ServerPacket getResponse(ClientPacket packet, DatagramPacket pkt) {
+        switch (packet.getPacketType()) {
+            case LOGIN:
+                return handleLogin((LoginPacket) packet, pkt.getAddress().getHostAddress());
+            case QUERY_LIST:
+                return new CurrentUsersListPacket(currentUsers);
+            case CHOOSE_PLAYER:
+                return handlePlayRequest((ChoosePlayerPacket) packet);
+            case ACCEPT_REQUEST:
+                return handleAcceptRequest((AcceptRequestPacket) packet);
+            case DENY_REQUEST:
+                return handleDenyRequest((DenyRequestPacket) packet);
+            case PLAY_GAME:
+                return handlePlay((PlayGamePacket) packet);
+            case LOGOUT:
+                return handleLogout((LogoutPacket) packet);
+            default:
+                throw new BadPacketException("Unrecognized packet format");
+        }
+    }
 
-	private ServerPacket handleLogout(LogoutPacket packet) {
-		//get user
-		User u = currentUsers.get(packet.getUsername());
-		
-		//null check
-		if (u == null) return null;
-		
-		//end any games
-		Game g = u.getCurrentGame();
-		if (g != null) {
-			u.getCurrentGame().terminate();
-			currentGames.remove(g);
-		}
-		
-		//set user state
-		u.setState(UserState.OFFLINE);
-		
-		return null;
-	}
+    private ServerPacket handleLogout(LogoutPacket packet) {
+        //get user
+        User u = currentUsers.get(packet.getUsername());
 
-	private ServerPacket handlePlay(PlayGamePacket packet) {
-		User u = currentUsers.get(packet.getUsername());
+        //null check
+        if (u == null)
+            return null;
 
-		// make sure user is playing a game and it's their turn
-		if (u == null || u.getCurrentGame() == null
-				|| !u.getCurrentGame().isTurn(u)) {
-			return new IllegalMovePacket(IllegalMoveType.OUT_OF_TURN);
-		}
+        //end any games
+        Game g = u.getCurrentGame();
+        if (g != null) {
+            u.getCurrentGame().terminate();
+            currentGames.remove(g);
+        }
 
-		// check for illegal move
-		if (packet.getCellNumber() < 1 || packet.getCellNumber() > 9) {
-			return new IllegalMovePacket(IllegalMoveType.OCCUPIED);
-		}
+        //set user state
+        u.setState(UserState.OFFLINE);
 
-		Game g = u.getCurrentGame();
-		try {
-			switch (g.play(packet.getCellNumber())) {
-			case WIN:
-				g.terminate();
-				currentGames.remove(g);
-				try {
-					sendPacket(new GameResultPacket(GameResultType.LOSS),
-							g.otherPlayer(u));
-				} catch (UnknownHostException e) {
-					e.printStackTrace();
-				}
-				return new GameResultPacket(GameResultType.WIN);
-			case DRAW:
-				g.terminate();
-				currentGames.remove(g);
-				try {
-					sendPacket(new GameResultPacket(GameResultType.DRAW),
-							g.otherPlayer(u));
-				} catch (UnknownHostException e) {
-					e.printStackTrace();
-				}
-				return new GameResultPacket(GameResultType.DRAW);	
-			case IN_PROGRESS:
-				try {
-					sendPacket(new CurrentGameStatePacket(g),
-							g.otherPlayer(u));
-				} catch (UnknownHostException e) {
-					e.printStackTrace();
-				}
-				return null;
-			default:
-				break;
-			}
-		} catch (IllegalMoveException e) {
-			return new IllegalMovePacket(IllegalMoveType.OCCUPIED);
-		}
-		
-		return null;
+        return null;
+    }
 
-	}
+    private ServerPacket handlePlay(PlayGamePacket packet) {
+        User u = currentUsers.get(packet.getUsername());
 
-	private ServerPacket handleDenyRequest(DenyRequestPacket packet) {
-		User sender = currentUsers.get(packet.getSender());
-		User receiver = currentUsers.get(packet.getReciever());
+        // make sure user is playing a game and it's their turn
+        if (u == null || u.getCurrentGame() == null || !u.getCurrentGame().isTurn(u)) {
+            return new IllegalMovePacket(IllegalMoveType.OUT_OF_TURN);
+        }
 
-		sender.setState(UserState.FREE);
-		receiver.setState(UserState.FREE);
+        // check for illegal move
+        if (packet.getCellNumber() < 1 || packet.getCellNumber() > 9) {
+            return new IllegalMovePacket(IllegalMoveType.OCCUPIED);
+        }
 
-		try {
-			sendPacket(
-					new PlayRequestAcknowledgementPacket(sender.getUsername(),
-							PlayRequestAcknowledgementStatus.DENY), receiver);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+        Game g = u.getCurrentGame();
+        try {
+            switch (g.play(packet.getCellNumber())) {
+                case WIN:
+                    g.terminate();
+                    currentGames.remove(g);
+                    try {
+                        sendPacket(new GameResultPacket(GameResultType.LOSS), g.otherPlayer(u));
+                    } catch (UnknownHostException e) {
+                        e.printStackTrace();
+                    }
+                    return new GameResultPacket(GameResultType.WIN);
+                case DRAW:
+                    g.terminate();
+                    currentGames.remove(g);
+                    try {
+                        sendPacket(new GameResultPacket(GameResultType.DRAW), g.otherPlayer(u));
+                    } catch (UnknownHostException e) {
+                        e.printStackTrace();
+                    }
+                    return new GameResultPacket(GameResultType.DRAW);
+                case IN_PROGRESS:
+                    try {
+                        sendPacket(new CurrentGameStatePacket(g), g.otherPlayer(u));
+                    } catch (UnknownHostException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                default:
+                    break;
+            }
+        } catch (IllegalMoveException e) {
+            return new IllegalMovePacket(IllegalMoveType.OCCUPIED);
+        }
 
-	private ServerPacket handleAcceptRequest(AcceptRequestPacket packet) {
-		User sender = currentUsers.get(packet.getSender());
-		User receiver = currentUsers.get(packet.getReciever());
+        return null;
 
-		sender.setState(UserState.BUSY);
-		receiver.setState(UserState.BUSY);
+    }
 
-		try {
-			sendPacket(
-					new PlayRequestAcknowledgementPacket(sender.getUsername(),
-							PlayRequestAcknowledgementStatus.ACCEPTED),
-					receiver);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
+    private ServerPacket handleDenyRequest(DenyRequestPacket packet) {
+        User sender = currentUsers.get(packet.getSender());
+        User receiver = currentUsers.get(packet.getReciever());
 
-		Game g = new Game(receiver, sender);
-		currentGames.add(g);
+        sender.setState(UserState.FREE);
+        receiver.setState(UserState.FREE);
 
-		try {
-			sendPacket(new CurrentGameStatePacket(g), receiver);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+        try {
+            sendPacket(
+                    new PlayRequestAcknowledgementPacket(sender.getUsername(), PlayRequestAcknowledgementStatus.DENY),
+                    receiver);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-	private ServerPacket handlePlayRequest(ChoosePlayerPacket packet) {
-		// check state of sender
-		User sender = currentUsers.get(packet.getSender());
-		if (sender == null || sender.getState() != UserState.FREE) {
-			return new PlayRequestAcknowledgementPacket(sender == null ? ""
-					: sender.getUsername(),
-					PlayRequestAcknowledgementStatus.FAILURE);
-		}
+    private ServerPacket handleAcceptRequest(AcceptRequestPacket packet) {
+        User sender = currentUsers.get(packet.getSender());
+        User receiver = currentUsers.get(packet.getReciever());
 
-		// sender is free, check state of receiver
-		User receiver = currentUsers.get(packet.getReciever());
-		if (receiver == null || receiver.getState() != UserState.FREE || receiver == sender) {
-			return new PlayRequestAcknowledgementPacket(packet.getReciever(),
-					PlayRequestAcknowledgementStatus.FAILURE);
-		}
+        sender.setState(UserState.BUSY);
+        receiver.setState(UserState.BUSY);
 
-		// receiver is free, set states into decision
-		sender.setState(UserState.DECISION);
-		receiver.setState(UserState.DECISION);
+        try {
+            sendPacket(new PlayRequestAcknowledgementPacket(sender.getUsername(),
+                    PlayRequestAcknowledgementStatus.ACCEPTED), receiver);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
 
-		// send choose message to client two
-		try {
-			sendPacket(new PlayRequestPacket(sender.getUsername()), receiver);
-		} catch (UnknownHostException e) {
-			return new PlayRequestAcknowledgementPacket(receiver.getUsername(),
-					PlayRequestAcknowledgementStatus.FAILURE);
-		}
+        Game g = new Game(receiver, sender);
+        currentGames.add(g);
 
-		return null;
-	}
+        try {
+            sendPacket(new CurrentGameStatePacket(g), receiver);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-	/**
-	 * 
-	 * @param packet
-	 * @return
-	 */
-	private ServerPacket handleLogin(LoginPacket packet, String ip) {
-		// try to find a user with the input username
-		User u = currentUsers.get(packet.getUsername());
+    private ServerPacket handlePlayRequest(ChoosePlayerPacket packet) {
+        // check state of sender
+        User sender = currentUsers.get(packet.getSender());
+        if (sender == null || sender.getState() != UserState.FREE) {
+            return new PlayRequestAcknowledgementPacket(sender == null ? "" : sender.getUsername(),
+                    PlayRequestAcknowledgementStatus.FAILURE);
+        }
 
-		// register user if no user exists with this username
-		if (u == null) {
-			u = new User(packet.getUsername(), UserState.OFFLINE, ip,
-					packet.getPort());
-			currentUsers.put(u.getUsername(), u);
-		}
+        // sender is free, check state of receiver
+        User receiver = currentUsers.get(packet.getReciever());
+        if (receiver == null || receiver.getState() != UserState.FREE || receiver == sender) {
+            return new PlayRequestAcknowledgementPacket(packet.getReciever(), PlayRequestAcknowledgementStatus.FAILURE);
+        }
 
-		if (u.getState() == UserState.OFFLINE) {
-			//check for maximum of five online from same IP, fail if so
-			if (currentUsers.moreThanNOnlineWithSameIp(5, ip)) {
-				return new LoginAcknowledgementPacket(
-						LoginAcknowledgementType.FAILURE);
-			}
-			// login success for offline/newly registered user
-			u.setState(UserState.FREE);
-			return new LoginAcknowledgementPacket(
-					LoginAcknowledgementType.SUCCESS);
+        // receiver is free, set states into decision
+        sender.setState(UserState.DECISION);
+        receiver.setState(UserState.DECISION);
 
-		} else if (u.getState() == UserState.BUSY
-				|| u.getState() == UserState.DECISION
-				|| u.getState() == UserState.FREE) {
-			// login failure for online user
-			return new LoginAcknowledgementPacket(
-					LoginAcknowledgementType.FAILURE);
+        // send choose message to client two
+        try {
+            sendPacket(new PlayRequestPacket(sender.getUsername()), receiver);
+        } catch (UnknownHostException e) {
+            return new PlayRequestAcknowledgementPacket(receiver.getUsername(),
+                    PlayRequestAcknowledgementStatus.FAILURE);
+        }
 
-		} else {
-			// this should not be reachable
-			throw new IllegalStateException();
-		}
-	}
+        return null;
+    }
 
-	public void recieve() throws SocketException {
-		pool.execute(new UDPReciever(socket, this));
-	}
+    /**
+     * 
+     * @param packet
+     * @return
+     */
+    private ServerPacket handleLogin(LoginPacket packet, String ip) {
+        // try to find a user with the input username
+        User u = currentUsers.get(packet.getUsername());
 
+        // register user if no user exists with this username
+        if (u == null) {
+            u = new User(packet.getUsername(), UserState.OFFLINE, ip, packet.getPort());
+            currentUsers.put(u.getUsername(), u);
+        }
 
+        if (u.getState() == UserState.OFFLINE) {
+            //check for maximum of five online from same IP, fail if so
+            if (currentUsers.moreThanNOnlineWithSameIp(5, ip)) {
+                return new LoginAcknowledgementPacket(LoginAcknowledgementType.FAILURE);
+            }
+            // login success for offline/newly registered user
+            u.setState(UserState.FREE);
+            return new LoginAcknowledgementPacket(LoginAcknowledgementType.SUCCESS);
 
-	public void sendPacket(ServerPacket p, InetAddress addr, int port) {
-		if (p == null ) return;
-		
-		byte[] payload = p.toPayload().getBytes();
-		DatagramPacket sendPacket;
-		sendPacket = new DatagramPacket(payload, payload.length, addr, port);
+        } else if (u.getState() == UserState.BUSY || u.getState() == UserState.DECISION
+                || u.getState() == UserState.FREE) {
+            // login failure for online user
+            return new LoginAcknowledgementPacket(LoginAcknowledgementType.FAILURE);
 
-		try {
-			socket.send(sendPacket);
-		} catch (IOException e) {
-			socket.close();
-			e.printStackTrace();
-			return;
-		}
+        } else {
+            // this should not be reachable
+            throw new IllegalStateException();
+        }
+    }
 
-		System.out.println("[" + Calendar.getInstance().getTimeInMillis()
-				+ "] Sent to client: (IP: " + addr.getHostName() + ", Port: "
-				+ String.valueOf(port) + "): " + p.toPayload());
-	}
+    public void recieve() throws SocketException {
+        pool.execute(new UDPReciever(socket, this));
+    }
 
-	public void respond(DatagramPacket p) throws UnknownHostException {
-		Payload payload = new Payload(new String(p.getData(), 0, p.getLength()).trim());
-		ClientPacket cp = ClientPacket.fromPayload(payload);
+    public void sendPacket(ServerPacket p, InetAddress addr, int port) {
+        if (p == null)
+            return;
 
-		ack(cp, p);
+        byte[] payload = p.toPayload().getBytes();
+        DatagramPacket sendPacket;
+        sendPacket = new DatagramPacket(payload, payload.length, addr, port);
 
-		ServerPacket response = getResponse(cp, p);
-		sendPacket(response, currentUsers.get(cp.getUsername()));
-	}
+        try {
+            socket.send(sendPacket);
+        } catch (IOException e) {
+            socket.close();
+            e.printStackTrace();
+            return;
+        }
 
-	private void sendPacket(ServerPacket response, User u)
-			throws UnknownHostException {
-		sendPacket(response, InetAddress.getByName(u.getIp()), u.getPort());
-	}
+        System.out.println("[" + Calendar.getInstance().getTimeInMillis() + "] Sent to client: (IP: "
+                + addr.getHostName() + ", Port: " + String.valueOf(port) + "): " + p.toPayload());
+    }
 
-	private void ack(ClientPacket cp, DatagramPacket p) {
-		AcknowledgementPacket ack = new AcknowledgementPacket(cp.getPacketId());
-		sendPacket(ack, p.getAddress(), p.getPort());
-	}
-	
-	public static void main(String[] args) throws SocketException, IOException {
-		(new Server()).recieve();
-	}
+    public void respond(DatagramPacket p) throws UnknownHostException {
+        Payload payload = new Payload(new String(p.getData(), 0, p.getLength()).trim());
+        ClientPacket cp = ClientPacket.fromPayload(payload);
+
+        ack(cp, p);
+
+        ServerPacket response = getResponse(cp, p);
+        sendPacket(response, currentUsers.get(cp.getUsername()));
+    }
+
+    private void sendPacket(ServerPacket response, User u) throws UnknownHostException {
+        sendPacket(response, InetAddress.getByName(u.getIp()), u.getPort());
+    }
+
+    private void ack(ClientPacket cp, DatagramPacket p) {
+        AcknowledgementPacket ack = new AcknowledgementPacket(cp.getPacketId());
+        sendPacket(ack, p.getAddress(), p.getPort());
+    }
+
+    public static void main(String[] args) throws SocketException, IOException {
+        (new Server()).recieve();
+    }
 }

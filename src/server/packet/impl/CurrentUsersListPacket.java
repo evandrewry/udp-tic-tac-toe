@@ -11,42 +11,41 @@ import common.UserList;
 import exception.BadPacketException;
 
 public class CurrentUsersListPacket extends ServerPacket {
-	private UserList users;
-	public static final String PACKET_FORMAT = "ackls,%s";
-	public static final Pattern PACKET_PATTERN = Pattern
-			.compile("^ackls,(((\\w+),?)+)$");
+    private UserList users;
+    public static final String PACKET_FORMAT = "ackls,%s";
+    public static final Pattern PACKET_PATTERN = Pattern.compile("^ackls,(((\\w+),?)+)$");
 
-	public CurrentUsersListPacket(UserList currentUsers) {
-		this.users = currentUsers;
-	}
+    public CurrentUsersListPacket(UserList currentUsers) {
+        this.users = currentUsers;
+    }
 
-	public UserList getUsers() {
-		return this.users;
-	}
-	
-	@Override
-	public String getPacketFormat() {
-		return PACKET_FORMAT;
-	}
+    public UserList getUsers() {
+        return this.users;
+    }
 
-	@Override
-	public Pattern getPacketPattern() {
-		return PACKET_PATTERN;
-	}
+    @Override
+    public String getPacketFormat() {
+        return PACKET_FORMAT;
+    }
 
-	@Override
-	public Object[] getParameters() {
-		return new Object[] { users.toString() };
-	}
+    @Override
+    public Pattern getPacketPattern() {
+        return PACKET_PATTERN;
+    }
 
-	public static CurrentUsersListPacket fromPayload(Payload payload) {
-		Matcher m = PACKET_PATTERN.matcher(payload.content);
-		if (m.matches()) {
-			UserList users = UserList.fromString(m.group(1));
-			return new CurrentUsersListPacket(users);
-		} else {
-			throw new BadPacketException("Could not parse.");
-		}
-	}
+    @Override
+    public Object[] getParameters() {
+        return new Object[] { users.toString() };
+    }
+
+    public static CurrentUsersListPacket fromPayload(Payload payload) {
+        Matcher m = PACKET_PATTERN.matcher(payload.content);
+        if (m.matches()) {
+            UserList users = UserList.fromString(m.group(1));
+            return new CurrentUsersListPacket(users);
+        } else {
+            throw new BadPacketException("Could not parse.");
+        }
+    }
 
 }
