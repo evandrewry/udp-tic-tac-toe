@@ -110,6 +110,7 @@ public class Client {
                 return;
             case ILLEGAL_MOVE:
                 handleIllegalMove((IllegalMovePacket) packet);
+                return;
             case LOGIN_ACK:
                 handleLoginAck((LoginAcknowledgementPacket) packet);
                 return;
