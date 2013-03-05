@@ -3,25 +3,23 @@
     <target name="build" depends="server,client">
     </target>
     <target name="server">
+        <echo message="Compiling Server.jar ..." level="info" />
         <jar destfile="/Users/evan/git/udp-tictactoe/Server.jar" filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Main-Class" value="server.Server"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
             <fileset dir="/Users/evan/git/udp-tictactoe/bin"/>
-            <zipfileset excludes="META-INF/*.SF" src="/Developer/Applications/eclipse-indigo-sr2/plugins/org.junit_4.8.2.v4_8_2_v20110321-1705/junit.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/Developer/Applications/eclipse-indigo-sr2/plugins/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
         </jar>
     </target>
     <target name="client">
+        <echo message="Compiling Client.jar ..." level="info" />
         <jar destfile="/Users/evan/git/udp-tictactoe/Client.jar" filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Main-Class" value="client.Client"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
             <fileset dir="/Users/evan/git/udp-tictactoe/bin"/>
-            <zipfileset excludes="META-INF/*.SF" src="/Developer/Applications/eclipse-indigo-sr2/plugins/org.junit_4.8.2.v4_8_2_v20110321-1705/junit.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/Developer/Applications/eclipse-indigo-sr2/plugins/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
         </jar>
     </target>
 </project>
