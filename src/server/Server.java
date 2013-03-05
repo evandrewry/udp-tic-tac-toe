@@ -56,8 +56,13 @@ public class Server {
      * @throws IOException
      */
     public static void main(String[] args) {
+        //check arguments
+        if (args.length != 1) {
+            System.out.println("usage: server <server-port>");
+            return;
+        }
         try {
-            (new Server(4119)).recieve();
+            (new Server(Integer.valueOf(args[0]))).recieve();
         } catch (SocketException e) {
             System.out.println("couldn't connect to socket! exiting....");
         } catch (IOException e) {

@@ -34,8 +34,14 @@ public class Client {
      * @param args
      */
     public static void main(String[] args) {
+        //check arguments
+        if (args.length != 2) {
+            System.out.println("usage: client <server-ip> <server-port>");
+            return;
+        }
+
         try {
-            (new Client("localhost", 4312)).run();
+            (new Client(args[0], Integer.valueOf(args[1]))).run();
         } catch (SocketException e) {
             System.out.println("Could not connect to socket.");
         }
