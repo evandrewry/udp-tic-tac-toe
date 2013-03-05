@@ -14,6 +14,7 @@ import client.packet.ClientPacket;
 import client.packet.impl.LoginPacket;
 import client.packet.impl.LogoutPacket;
 import exception.InvalidClientCommandException;
+import exception.InvalidCommandParametersException;
 
 /**
  * Client UDP sender that takes input from console, converts it to a packet, and sends it to the server.
@@ -72,6 +73,9 @@ public class UDPSender implements Runnable {
             //convert the command to a packet payload
             try {
                 buffer = ClientPacket.fromCommand(new Command(inputString), handler).toPayload().getBytes();
+            } catch (InvalidCommandParametersException e) {
+                System.out.println("invalid command parameters");
+                continue;
             } catch (InvalidClientCommandException e) {
                 System.out.println("invalid command");
                 continue;
